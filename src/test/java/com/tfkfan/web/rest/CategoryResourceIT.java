@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.tfkfan.IntegrationTest;
 import com.tfkfan.domain.Category;
 import com.tfkfan.repository.CategoryRepository;
-import com.tfkfan.service.criteria.CategoryCriteria;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +45,19 @@ class CategoryResourceIT {
     private static final Long UPDATED_PARENT_CATEGORY_CODE = 2L;
     private static final Long SMALLER_PARENT_CATEGORY_CODE = 1L - 1L;
 
+    private static final Long DEFAULT_PARENT_CATEGORY_ID = 1L;
+    private static final Long UPDATED_PARENT_CATEGORY_ID = 2L;
+    private static final Long SMALLER_PARENT_CATEGORY_ID = 1L - 1L;
+
+    private static final Boolean DEFAULT_IS_HIDDEN = false;
+    private static final Boolean UPDATED_IS_HIDDEN = true;
+
+    private static final Instant DEFAULT_CREATION_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Instant DEFAULT_MODIFICATION_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_MODIFICATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/categories";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -71,7 +86,11 @@ class CategoryResourceIT {
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .parentCategoryCode(DEFAULT_PARENT_CATEGORY_CODE);
+            .parentCategoryCode(DEFAULT_PARENT_CATEGORY_CODE)
+            .parent_category_id(DEFAULT_PARENT_CATEGORY_ID)
+            .is_hidden(DEFAULT_IS_HIDDEN)
+            .creation_date(DEFAULT_CREATION_DATE)
+            .modification_date(DEFAULT_MODIFICATION_DATE);
         return category;
     }
 
@@ -86,7 +105,11 @@ class CategoryResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE);
+            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE)
+            .parent_category_id(UPDATED_PARENT_CATEGORY_ID)
+            .is_hidden(UPDATED_IS_HIDDEN)
+            .creation_date(UPDATED_CREATION_DATE)
+            .modification_date(UPDATED_MODIFICATION_DATE);
         return category;
     }
 
@@ -112,6 +135,10 @@ class CategoryResourceIT {
         assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCategory.getParentCategoryCode()).isEqualTo(DEFAULT_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParent_category_id()).isEqualTo(DEFAULT_PARENT_CATEGORY_ID);
+        assertThat(testCategory.getIsHidden()).isEqualTo(DEFAULT_IS_HIDDEN);
+        assertThat(testCategory.getCreationDate()).isEqualTo(DEFAULT_CREATION_DATE);
+        assertThat(testCategory.getModificationDate()).isEqualTo(DEFAULT_MODIFICATION_DATE);
     }
 
     @Test
@@ -168,6 +195,57 @@ class CategoryResourceIT {
 
     @Test
     @Transactional
+    void checkIs_hiddenIsRequired() throws Exception {
+        int databaseSizeBeforeTest = categoryRepository.findAll().size();
+        // set the field null
+        category.setIsHidden(null);
+
+        // Create the Category, which fails.
+
+        restCategoryMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(category)))
+            .andExpect(status().isBadRequest());
+
+        List<Category> categoryList = categoryRepository.findAll();
+        assertThat(categoryList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreation_dateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = categoryRepository.findAll().size();
+        // set the field null
+        category.setCreationDate(null);
+
+        // Create the Category, which fails.
+
+        restCategoryMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(category)))
+            .andExpect(status().isBadRequest());
+
+        List<Category> categoryList = categoryRepository.findAll();
+        assertThat(categoryList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkModification_dateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = categoryRepository.findAll().size();
+        // set the field null
+        category.setModificationDate(null);
+
+        // Create the Category, which fails.
+
+        restCategoryMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(category)))
+            .andExpect(status().isBadRequest());
+
+        List<Category> categoryList = categoryRepository.findAll();
+        assertThat(categoryList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllCategories() throws Exception {
         // Initialize the database
         categoryRepository.saveAndFlush(category);
@@ -181,7 +259,11 @@ class CategoryResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].parentCategoryCode").value(hasItem(DEFAULT_PARENT_CATEGORY_CODE.intValue())));
+            .andExpect(jsonPath("$.[*].parentCategoryCode").value(hasItem(DEFAULT_PARENT_CATEGORY_CODE.intValue())))
+            .andExpect(jsonPath("$.[*].parent_category_id").value(hasItem(DEFAULT_PARENT_CATEGORY_ID.intValue())))
+            .andExpect(jsonPath("$.[*].is_hidden").value(hasItem(DEFAULT_IS_HIDDEN.booleanValue())))
+            .andExpect(jsonPath("$.[*].creation_date").value(hasItem(DEFAULT_CREATION_DATE.toString())))
+            .andExpect(jsonPath("$.[*].modification_date").value(hasItem(DEFAULT_MODIFICATION_DATE.toString())));
     }
 
     @Test
@@ -199,7 +281,11 @@ class CategoryResourceIT {
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.parentCategoryCode").value(DEFAULT_PARENT_CATEGORY_CODE.intValue()));
+            .andExpect(jsonPath("$.parentCategoryCode").value(DEFAULT_PARENT_CATEGORY_CODE.intValue()))
+            .andExpect(jsonPath("$.parent_category_id").value(DEFAULT_PARENT_CATEGORY_ID.intValue()))
+            .andExpect(jsonPath("$.is_hidden").value(DEFAULT_IS_HIDDEN.booleanValue()))
+            .andExpect(jsonPath("$.creation_date").value(DEFAULT_CREATION_DATE.toString()))
+            .andExpect(jsonPath("$.modification_date").value(DEFAULT_MODIFICATION_DATE.toString()));
     }
 
     @Test
@@ -558,6 +644,266 @@ class CategoryResourceIT {
         defaultCategoryShouldBeFound("parentCategoryCode.greaterThan=" + SMALLER_PARENT_CATEGORY_CODE);
     }
 
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id equals to DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.equals=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id equals to UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.equals=" + UPDATED_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id not equals to DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.notEquals=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id not equals to UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.notEquals=" + UPDATED_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id in DEFAULT_PARENT_CATEGORY_ID or UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.in=" + DEFAULT_PARENT_CATEGORY_ID + "," + UPDATED_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id equals to UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.in=" + UPDATED_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id is not null
+        defaultCategoryShouldBeFound("parent_category_id.specified=true");
+
+        // Get all the categoryList where parent_category_id is null
+        defaultCategoryShouldNotBeFound("parent_category_id.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id is greater than or equal to DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.greaterThanOrEqual=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id is greater than or equal to UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.greaterThanOrEqual=" + UPDATED_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id is less than or equal to DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.lessThanOrEqual=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id is less than or equal to SMALLER_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.lessThanOrEqual=" + SMALLER_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsLessThanSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id is less than DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.lessThan=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id is less than UPDATED_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.lessThan=" + UPDATED_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByParent_category_idIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where parent_category_id is greater than DEFAULT_PARENT_CATEGORY_ID
+        defaultCategoryShouldNotBeFound("parent_category_id.greaterThan=" + DEFAULT_PARENT_CATEGORY_ID);
+
+        // Get all the categoryList where parent_category_id is greater than SMALLER_PARENT_CATEGORY_ID
+        defaultCategoryShouldBeFound("parent_category_id.greaterThan=" + SMALLER_PARENT_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByIs_hiddenIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where is_hidden equals to DEFAULT_IS_HIDDEN
+        defaultCategoryShouldBeFound("is_hidden.equals=" + DEFAULT_IS_HIDDEN);
+
+        // Get all the categoryList where is_hidden equals to UPDATED_IS_HIDDEN
+        defaultCategoryShouldNotBeFound("is_hidden.equals=" + UPDATED_IS_HIDDEN);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByIs_hiddenIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where is_hidden not equals to DEFAULT_IS_HIDDEN
+        defaultCategoryShouldNotBeFound("is_hidden.notEquals=" + DEFAULT_IS_HIDDEN);
+
+        // Get all the categoryList where is_hidden not equals to UPDATED_IS_HIDDEN
+        defaultCategoryShouldBeFound("is_hidden.notEquals=" + UPDATED_IS_HIDDEN);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByIs_hiddenIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where is_hidden in DEFAULT_IS_HIDDEN or UPDATED_IS_HIDDEN
+        defaultCategoryShouldBeFound("is_hidden.in=" + DEFAULT_IS_HIDDEN + "," + UPDATED_IS_HIDDEN);
+
+        // Get all the categoryList where is_hidden equals to UPDATED_IS_HIDDEN
+        defaultCategoryShouldNotBeFound("is_hidden.in=" + UPDATED_IS_HIDDEN);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByIs_hiddenIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where is_hidden is not null
+        defaultCategoryShouldBeFound("is_hidden.specified=true");
+
+        // Get all the categoryList where is_hidden is null
+        defaultCategoryShouldNotBeFound("is_hidden.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByCreation_dateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where creation_date equals to DEFAULT_CREATION_DATE
+        defaultCategoryShouldBeFound("creation_date.equals=" + DEFAULT_CREATION_DATE);
+
+        // Get all the categoryList where creation_date equals to UPDATED_CREATION_DATE
+        defaultCategoryShouldNotBeFound("creation_date.equals=" + UPDATED_CREATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByCreation_dateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where creation_date not equals to DEFAULT_CREATION_DATE
+        defaultCategoryShouldNotBeFound("creation_date.notEquals=" + DEFAULT_CREATION_DATE);
+
+        // Get all the categoryList where creation_date not equals to UPDATED_CREATION_DATE
+        defaultCategoryShouldBeFound("creation_date.notEquals=" + UPDATED_CREATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByCreation_dateIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where creation_date in DEFAULT_CREATION_DATE or UPDATED_CREATION_DATE
+        defaultCategoryShouldBeFound("creation_date.in=" + DEFAULT_CREATION_DATE + "," + UPDATED_CREATION_DATE);
+
+        // Get all the categoryList where creation_date equals to UPDATED_CREATION_DATE
+        defaultCategoryShouldNotBeFound("creation_date.in=" + UPDATED_CREATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByCreation_dateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where creation_date is not null
+        defaultCategoryShouldBeFound("creation_date.specified=true");
+
+        // Get all the categoryList where creation_date is null
+        defaultCategoryShouldNotBeFound("creation_date.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByModification_dateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where modification_date equals to DEFAULT_MODIFICATION_DATE
+        defaultCategoryShouldBeFound("modification_date.equals=" + DEFAULT_MODIFICATION_DATE);
+
+        // Get all the categoryList where modification_date equals to UPDATED_MODIFICATION_DATE
+        defaultCategoryShouldNotBeFound("modification_date.equals=" + UPDATED_MODIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByModification_dateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where modification_date not equals to DEFAULT_MODIFICATION_DATE
+        defaultCategoryShouldNotBeFound("modification_date.notEquals=" + DEFAULT_MODIFICATION_DATE);
+
+        // Get all the categoryList where modification_date not equals to UPDATED_MODIFICATION_DATE
+        defaultCategoryShouldBeFound("modification_date.notEquals=" + UPDATED_MODIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByModification_dateIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where modification_date in DEFAULT_MODIFICATION_DATE or UPDATED_MODIFICATION_DATE
+        defaultCategoryShouldBeFound("modification_date.in=" + DEFAULT_MODIFICATION_DATE + "," + UPDATED_MODIFICATION_DATE);
+
+        // Get all the categoryList where modification_date equals to UPDATED_MODIFICATION_DATE
+        defaultCategoryShouldNotBeFound("modification_date.in=" + UPDATED_MODIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByModification_dateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where modification_date is not null
+        defaultCategoryShouldBeFound("modification_date.specified=true");
+
+        // Get all the categoryList where modification_date is null
+        defaultCategoryShouldNotBeFound("modification_date.specified=false");
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -570,7 +916,11 @@ class CategoryResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].parentCategoryCode").value(hasItem(DEFAULT_PARENT_CATEGORY_CODE.intValue())));
+            .andExpect(jsonPath("$.[*].parentCategoryCode").value(hasItem(DEFAULT_PARENT_CATEGORY_CODE.intValue())))
+            .andExpect(jsonPath("$.[*].parent_category_id").value(hasItem(DEFAULT_PARENT_CATEGORY_ID.intValue())))
+            .andExpect(jsonPath("$.[*].is_hidden").value(hasItem(DEFAULT_IS_HIDDEN.booleanValue())))
+            .andExpect(jsonPath("$.[*].creation_date").value(hasItem(DEFAULT_CREATION_DATE.toString())))
+            .andExpect(jsonPath("$.[*].modification_date").value(hasItem(DEFAULT_MODIFICATION_DATE.toString())));
 
         // Check, that the count call also returns 1
         restCategoryMockMvc
@@ -622,7 +972,11 @@ class CategoryResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE);
+            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE)
+            .parent_category_id(UPDATED_PARENT_CATEGORY_ID)
+            .is_hidden(UPDATED_IS_HIDDEN)
+            .creation_date(UPDATED_CREATION_DATE)
+            .modification_date(UPDATED_MODIFICATION_DATE);
 
         restCategoryMockMvc
             .perform(
@@ -640,6 +994,10 @@ class CategoryResourceIT {
         assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
+        assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
+        assertThat(testCategory.getCreationDate()).isEqualTo(UPDATED_CREATION_DATE);
+        assertThat(testCategory.getModificationDate()).isEqualTo(UPDATED_MODIFICATION_DATE);
     }
 
     @Test
@@ -710,7 +1068,11 @@ class CategoryResourceIT {
         Category partialUpdatedCategory = new Category();
         partialUpdatedCategory.setId(category.getId());
 
-        partialUpdatedCategory.code(UPDATED_CODE).parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE);
+        partialUpdatedCategory
+            .code(UPDATED_CODE)
+            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE)
+            .parent_category_id(UPDATED_PARENT_CATEGORY_ID)
+            .is_hidden(UPDATED_IS_HIDDEN);
 
         restCategoryMockMvc
             .perform(
@@ -728,6 +1090,10 @@ class CategoryResourceIT {
         assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
+        assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
+        assertThat(testCategory.getCreationDate()).isEqualTo(DEFAULT_CREATION_DATE);
+        assertThat(testCategory.getModificationDate()).isEqualTo(DEFAULT_MODIFICATION_DATE);
     }
 
     @Test
@@ -746,7 +1112,11 @@ class CategoryResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE);
+            .parentCategoryCode(UPDATED_PARENT_CATEGORY_CODE)
+            .parent_category_id(UPDATED_PARENT_CATEGORY_ID)
+            .is_hidden(UPDATED_IS_HIDDEN)
+            .creation_date(UPDATED_CREATION_DATE)
+            .modification_date(UPDATED_MODIFICATION_DATE);
 
         restCategoryMockMvc
             .perform(
@@ -764,6 +1134,10 @@ class CategoryResourceIT {
         assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
+        assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
+        assertThat(testCategory.getCreationDate()).isEqualTo(UPDATED_CREATION_DATE);
+        assertThat(testCategory.getModificationDate()).isEqualTo(UPDATED_MODIFICATION_DATE);
     }
 
     @Test

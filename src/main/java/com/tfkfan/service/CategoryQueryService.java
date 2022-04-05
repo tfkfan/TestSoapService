@@ -5,7 +5,7 @@ import com.tfkfan.domain.Category;
 import com.tfkfan.repository.CategoryRepository;
 import com.tfkfan.service.criteria.CategoryCriteria;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -96,6 +96,15 @@ public class CategoryQueryService extends QueryService<Category> {
             }
             if (criteria.getParentCategoryCode() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getParentCategoryCode(), Category_.parentCategoryCode));
+            }
+            if (criteria.getIsHidden() != null) {
+                specification = specification.and(buildSpecification(criteria.getIsHidden(), Category_.isHidden));
+            }
+            if (criteria.getCreationDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreationDate(), Category_.creationDate));
+            }
+            if (criteria.getModificationDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getModificationDate(), Category_.modificationDate));
             }
         }
         return specification;

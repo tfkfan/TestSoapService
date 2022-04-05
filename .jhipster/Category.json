@@ -21,6 +21,25 @@
     {
       "fieldName": "parentCategoryCode",
       "fieldType": "Long"
+    },
+    {
+      "fieldName": "parent_category_id",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "is_hidden",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "creation_date",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "modification_date",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
     }
   ],
   "jpaMetamodelFiltering": true,

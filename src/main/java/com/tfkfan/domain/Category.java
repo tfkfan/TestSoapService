@@ -1,6 +1,7 @@
 package com.tfkfan.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -30,10 +31,31 @@ public class Category implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "parent_category_code")
+    @Column(name = "parent_category_id")
     private Long parentCategoryCode;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @NotNull
+    @Column(name = "is_hidden", nullable = false)
+    private Boolean isHidden = false;
+
+    @NotNull
+    @Column(name = "creation_date", nullable = false)
+    private Instant creationDate;
+
+    @NotNull
+    @Column(name = "modification_date", nullable = false)
+    private Instant modificationDate;
+
+    @PrePersist
+    protected void onCreate() {
+        creationDate = Instant.now();
+        onUpdate();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modificationDate = Instant.now();
+    }
 
     public Long getId() {
         return this.id;
@@ -100,6 +122,45 @@ public class Category implements Serializable {
         this.parentCategoryCode = parentCategoryCode;
     }
 
+    public Boolean getIsHidden() {
+        return this.isHidden;
+    }
+
+    public Category is_hidden(Boolean is_hidden) {
+        this.setIsHidden(is_hidden);
+        return this;
+    }
+
+    public void setIsHidden(Boolean is_hidden) {
+        this.isHidden = is_hidden;
+    }
+
+    public Instant getCreationDate() {
+        return this.creationDate;
+    }
+
+    public Category creation_date(Instant creation_date) {
+        this.setCreationDate(creation_date);
+        return this;
+    }
+
+    public void setCreationDate(Instant creation_date) {
+        this.creationDate = creation_date;
+    }
+
+    public Instant getModificationDate() {
+        return this.modificationDate;
+    }
+
+    public Category modification_date(Instant modification_date) {
+        this.setModificationDate(modification_date);
+        return this;
+    }
+
+    public void setModificationDate(Instant modification_date) {
+        this.modificationDate = modification_date;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -128,6 +189,9 @@ public class Category implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", parentCategoryCode=" + getParentCategoryCode() +
+            ", isHidden='" + getIsHidden() + "'" +
+            ", creationDate='" + getCreationDate() + "'" +
+            ", modificationDate='" + getModificationDate() + "'" +
             "}";
     }
 }

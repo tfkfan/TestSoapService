@@ -51,6 +51,15 @@ public class CategoryServiceImpl implements CategoryService {
                 if (category.getParentCategoryCode() != null) {
                     existingCategory.setParentCategoryCode(category.getParentCategoryCode());
                 }
+                if (category.getIsHidden() != null) {
+                    existingCategory.setIsHidden(category.getIsHidden());
+                }
+                if (category.getCreationDate() != null) {
+                    existingCategory.setCreationDate(category.getCreationDate());
+                }
+                if (category.getModificationDate() != null) {
+                    existingCategory.setModificationDate(category.getModificationDate());
+                }
 
                 return existingCategory;
             })

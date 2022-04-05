@@ -5,17 +5,13 @@ import java.util.Objects;
 import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
+import tech.jhipster.service.filter.InstantFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
 
 /**
- * Criteria class for the {@link com.tfkfan.domain.Category} entity. This class is used
- * in {@link com.tfkfan.web.rest.CategoryResource} to receive all the possible filtering options from
- * the Http GET request parameters.
+ * Criteria class for the {@link com.tfkfan.domain.Category} entity.
  * For example the following could be a valid request:
  * {@code /categories?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
@@ -36,6 +32,12 @@ public class CategoryCriteria implements Serializable, Criteria {
 
     private LongFilter parentCategoryCode;
 
+    private BooleanFilter isHidden;
+
+    private InstantFilter creationDate;
+
+    private InstantFilter modificationDate;
+
     private Boolean distinct;
 
     public CategoryCriteria() {}
@@ -46,6 +48,9 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.parentCategoryCode = other.parentCategoryCode == null ? null : other.parentCategoryCode.copy();
+        this.isHidden = other.isHidden == null ? null : other.isHidden.copy();
+        this.creationDate = other.creationDate == null ? null : other.creationDate.copy();
+        this.modificationDate = other.modificationDate == null ? null : other.modificationDate.copy();
         this.distinct = other.distinct;
     }
 
@@ -129,6 +134,51 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.parentCategoryCode = parentCategoryCode;
     }
 
+    public BooleanFilter getIsHidden() {
+        return isHidden;
+    }
+
+    public BooleanFilter is_hidden() {
+        if (isHidden == null) {
+            isHidden = new BooleanFilter();
+        }
+        return isHidden;
+    }
+
+    public void setIsHidden(BooleanFilter isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public InstantFilter getCreationDate() {
+        return creationDate;
+    }
+
+    public InstantFilter creation_date() {
+        if (creationDate == null) {
+            creationDate = new InstantFilter();
+        }
+        return creationDate;
+    }
+
+    public void setCreationDate(InstantFilter creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public InstantFilter getModificationDate() {
+        return modificationDate;
+    }
+
+    public InstantFilter modification_date() {
+        if (modificationDate == null) {
+            modificationDate = new InstantFilter();
+        }
+        return modificationDate;
+    }
+
+    public void setModificationDate(InstantFilter modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -152,13 +202,26 @@ public class CategoryCriteria implements Serializable, Criteria {
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
             Objects.equals(parentCategoryCode, that.parentCategoryCode) &&
+            Objects.equals(isHidden, that.isHidden) &&
+            Objects.equals(creationDate, that.creationDate) &&
+            Objects.equals(modificationDate, that.modificationDate) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, name, description, parentCategoryCode, distinct);
+        return Objects.hash(
+            id,
+            code,
+            name,
+            description,
+            parentCategoryCode,
+            isHidden,
+            creationDate,
+            modificationDate,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -170,6 +233,9 @@ public class CategoryCriteria implements Serializable, Criteria {
             (name != null ? "name=" + name + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
             (parentCategoryCode != null ? "parentCategoryCode=" + parentCategoryCode + ", " : "") +
+            (isHidden != null ? "is_hidden=" + isHidden + ", " : "") +
+            (creationDate != null ? "creation_date=" + creationDate + ", " : "") +
+            (modificationDate != null ? "modification_date=" + modificationDate + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
