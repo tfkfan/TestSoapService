@@ -3,4 +3,4 @@
  *
  * More information on https://github.com/zalando/problem-spring-web
  */
-package com.tfkfan.web.rest.errors;
+package com.tfkfan.exception;

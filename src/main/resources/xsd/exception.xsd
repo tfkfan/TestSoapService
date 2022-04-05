@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://com/tfkfan/webservices/categoryservice"
+            targetNamespace="http://com/tfkfan/webservices/categoryservice"
+            elementFormDefault="qualified">
+
+    <xsd:element name="fault" type="BaseFault">
+        <xsd:annotation>
+            <xsd:documentation>Базовый тип ошибки</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="BaseFault" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation>Описание базового типа описания ошибки</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence/>
+    </xsd:complexType>
+
+    <xsd:complexType name="BusinessException" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="BaseFault">
+                <xsd:sequence>
+                    <xsd:element name="message" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EntityTypeDefinedException" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessException">
+                <xsd:sequence>
+                    <xsd:element name="entityType" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ScenarioException" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessException">
+                <xsd:sequence>
+                    <xsd:element name="scenario" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="InternalException">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessException"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EntitySubordinationException">
+        <xsd:complexContent>
+            <xsd:extension base="EntityTypeDefinedException"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EntityNotFoundException">
+        <xsd:complexContent>
+            <xsd:extension base="EntityTypeDefinedException"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="DatabaseException">
+        <xsd:complexContent>
+            <xsd:extension base="ScenarioException"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EntityAlreadyExistsException">
+        <xsd:complexContent>
+            <xsd:extension base="EntityTypeDefinedException"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

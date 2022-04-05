@@ -2,8 +2,11 @@ package com.tfkfan.config;
 
 import javax.servlet.*;
 import javax.xml.ws.Endpoint;
+import javax.xml.ws.Service;
 
 import com.tfkfan.web.soap.CategoryServiceEndpoint;
+import com.tfkfan.web.resolver.SoapExceptionResolver;
+import com.tfkfan.webservices.categoryservice.CategoryService;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
@@ -12,20 +15,20 @@ import org.apache.cxf.transport.servlet.CXFServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath;
-import org.springframework.boot.web.server.*;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import tech.jhipster.config.JHipsterProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -69,7 +72,7 @@ public class WebConfigurer implements ServletContextInitializer {
 
     @Bean
     public ServletRegistrationBean<CXFServlet> dispatcherServlet() {
-        return new ServletRegistrationBean<>(new CXFServlet(), "/api/soap/*");
+        return new ServletRegistrationBean<>(new CXFServlet(), "/ws/v1/*");
     }
 
     @Bean
@@ -79,9 +82,9 @@ public class WebConfigurer implements ServletContextInitializer {
     }
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
-    public SpringBus springBus(LoggingFeature loggingFeature) {
+    public SpringBus springBus() {
         SpringBus cxfBus = new SpringBus();
-        cxfBus.getFeatures().add(loggingFeature);
+        cxfBus.setProperty("org.apache.cxf.logging.FaultListener", new SoapExceptionResolver());
         return cxfBus;
     }
 
@@ -95,7 +98,20 @@ public class WebConfigurer implements ServletContextInitializer {
     @Bean
     public Endpoint endpoint(Bus bus, CategoryServiceEndpoint serviceEndpoint) {
         EndpointImpl endpoint = new EndpointImpl(bus, serviceEndpoint);
+
+        final Service service = new CategoryService();
+
+        endpoint.setServiceName(service.getServiceName());
+        endpoint.setEndpointName(service.getPorts().next());
+        endpoint.setWsdlLocation(service.getWSDLDocumentLocation().toString());
+        endpoint.setProperties(getEndpointProps());
         endpoint.publish("/service/categories");
         return endpoint;
+    }
+
+    private Map<String, Object> getEndpointProps() {
+        final Map<String, Object> props = new HashMap<>();
+        //props.put("schema-validation-enabled", "REQUEST");    //валидация запросов
+        return props;
     }
 }
