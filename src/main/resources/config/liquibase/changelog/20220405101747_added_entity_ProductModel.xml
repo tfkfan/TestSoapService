@@ -7,13 +7,13 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="20220405101747-1" author="tfkfan">
-        <createSequence sequenceName="category_sequence" startValue="50" incrementBy="1"/>
+        <createSequence sequenceName="product_model_sequence" startValue="50" incrementBy="1"/>
     </changeSet>
     <!--
-        Added the entity Category.
+        Added the entity ProductModel.
     -->
     <changeSet id="20220405101747-2" author="tfkfan">
-        <createTable tableName="category">
+        <createTable tableName="product_model">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -26,12 +26,6 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="parent_category_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="is_hidden" type="boolean">
-                <constraints nullable="false" />
-            </column>
             <column name="creation_date" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
@@ -40,22 +34,7 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="category" columnName="creation_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="category" columnName="modification_date" columnDataType="${datetimeType}"/>
-
-        <addForeignKeyConstraint baseColumnNames="parent_category_id"
-                                 baseTableName="category"
-                                 constraintName="fk_parent_category_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="category"/>
-    </changeSet>
-
-    <changeSet id="20220405101747-3" author="tfkfan">
-            <loadData
-                file="config/liquibase/initial-data/category.csv"
-                separator=";"
-                tableName="category"
-                usePreparedStatements="true">
-            </loadData>
+        <dropDefaultValue tableName="product_model" columnName="creation_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="product_model" columnName="modification_date" columnDataType="${datetimeType}"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,9 +1,10 @@
-package com.tfkfan.service;
+package com.tfkfan.service.criteria;
 
 import com.tfkfan.domain.*; // for static metamodels
 import com.tfkfan.domain.Category;
 import com.tfkfan.repository.CategoryRepository;
-import com.tfkfan.service.criteria.CategoryCriteria;
+import com.tfkfan.service.criteria.model.CategoryCriteria;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Category} entities in the database.
@@ -24,7 +24,7 @@ import tech.jhipster.service.QueryService;
  */
 @Service
 @Transactional(readOnly = true)
-public class CategoryQueryService extends QueryService<Category> {
+public class CategoryQueryService extends BaseQueryService<Category> {
 
     private final Logger log = LoggerFactory.getLogger(CategoryQueryService.class);
 
@@ -36,6 +36,7 @@ public class CategoryQueryService extends QueryService<Category> {
 
     /**
      * Return a {@link List} of {@link Category} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -53,10 +54,12 @@ public class CategoryQueryService extends QueryService<Category> {
         final Specification<Category> specification = createSpecification(criteria);
         return categoryRepository.findOne(specification);
     }
+
     /**
      * Return a {@link Page} of {@link Category} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -68,6 +71,7 @@ public class CategoryQueryService extends QueryService<Category> {
 
     /**
      * Return the number of matching entities in the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -80,6 +84,7 @@ public class CategoryQueryService extends QueryService<Category> {
 
     /**
      * Function to convert {@link CategoryCriteria} to a {@link Specification}
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
@@ -105,6 +110,9 @@ public class CategoryQueryService extends QueryService<Category> {
             if (criteria.getParentCategoryId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getParentCategoryId(), Category_.parentCategoryId));
             }
+            if (criteria.getParentCategoryIdNull() != null) {
+                specification = specification.and(buildIsNullNotNullSpecification(criteria.getParentCategoryIdNull(), Category_.parentCategoryId));
+            }
             if (criteria.getIsHidden() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsHidden(), Category_.isHidden));
             }
@@ -117,4 +125,5 @@ public class CategoryQueryService extends QueryService<Category> {
         }
         return specification;
     }
+
 }

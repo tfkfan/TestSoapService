@@ -1,6 +1,6 @@
 package com.tfkfan.exception;
 
-import com.tfkfan.webservices.categoryservice.BaseFault;
+import com.tfkfan.webservices.types.BaseFault;
 
 /**
  * @author Baltser Artem tfkfan

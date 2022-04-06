@@ -1,12 +1,10 @@
 package com.tfkfan.config;
 
-import javax.servlet.*;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.Service;
-
-import com.tfkfan.web.soap.CategoryServiceEndpoint;
 import com.tfkfan.web.resolver.SoapExceptionResolver;
-import com.tfkfan.webservices.categoryservice.CategoryService;
+import com.tfkfan.webservices.types.CategoryService;
+import com.tfkfan.webservices.types.CategoryServicePorts;
+import com.tfkfan.webservices.types.ProductModelService;
+import com.tfkfan.webservices.types.ProductModelServicePorts;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
@@ -27,6 +25,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import tech.jhipster.config.JHipsterProperties;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.Service;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,7 +98,7 @@ public class WebConfigurer implements ServletContextInitializer {
     }
 
     @Bean
-    public Endpoint endpoint(Bus bus, CategoryServiceEndpoint serviceEndpoint) {
+    public Endpoint categoryServiceEndpointBean(Bus bus, CategoryServicePorts serviceEndpoint) {
         EndpointImpl endpoint = new EndpointImpl(bus, serviceEndpoint);
 
         final Service service = new CategoryService();
@@ -105,7 +107,21 @@ public class WebConfigurer implements ServletContextInitializer {
         endpoint.setEndpointName(service.getPorts().next());
         endpoint.setWsdlLocation(service.getWSDLDocumentLocation().toString());
         endpoint.setProperties(getEndpointProps());
-        endpoint.publish("/service/categories");
+        endpoint.publish("/categoryservice");
+        return endpoint;
+    }
+
+    @Bean
+    public Endpoint productModelServiceEndpointBean(Bus bus, ProductModelServicePorts serviceEndpoint) {
+        EndpointImpl endpoint = new EndpointImpl(bus, serviceEndpoint);
+
+        final Service service = new ProductModelService();
+
+        endpoint.setServiceName(service.getServiceName());
+        endpoint.setEndpointName(service.getPorts().next());
+        endpoint.setWsdlLocation(service.getWSDLDocumentLocation().toString());
+        endpoint.setProperties(getEndpointProps());
+        endpoint.publish("/modelservice");
         return endpoint;
     }
 

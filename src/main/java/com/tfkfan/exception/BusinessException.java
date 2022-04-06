@@ -1,7 +1,5 @@
 package com.tfkfan.exception;
 
-import lombok.Getter;
-
 /**
  * @author Baltser Artem tfkfan
  */

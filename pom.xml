@@ -420,7 +420,16 @@
                             <sourceRoot>${project.build.directory}/generated-sources/generated</sourceRoot>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/CategoryService/categories.wsdl</wsdl>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/CategoryService/service.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
+                                    </extraargs>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/ProductModelService/service.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
+                                    </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>
@@ -429,6 +438,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <!-- plugin needed to customize cxf genrated classes -->
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics</artifactId>
+                        <version>0.9.4</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
         <pluginManagement>

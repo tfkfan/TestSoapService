@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns="http://com/tfkfan/webservices/categoryservice"
-            targetNamespace="http://com/tfkfan/webservices/categoryservice"
             elementFormDefault="qualified">
 
     <xsd:element name="fault" type="BaseFault">
@@ -16,6 +14,15 @@
         </xsd:annotation>
         <xsd:sequence/>
     </xsd:complexType>
+
+    <xsd:simpleType name="DBScenarioType" final="restriction" >
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="READ" />
+            <xsd:enumeration value="CREATE" />
+            <xsd:enumeration value="UPDATE" />
+            <xsd:enumeration value="DELETE" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:complexType name="BusinessException" abstract="true">
         <xsd:complexContent>

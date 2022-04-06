@@ -3,25 +3,25 @@ package com.tfkfan.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 /**
  * A Category.
  */
 @Entity
-@Table(name = "category")
-public class Category implements Serializable {
-    public static final String ENTITY_NAME = "category";
+@Table(name = "product_model")
+public class ProductModel implements Serializable {
+    public static final String ENTITY_NAME = "model";
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
-    @SequenceGenerator(name = "category_sequence", initialValue = 50, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_model_sequence")
+    @SequenceGenerator(name = "product_model_sequence", initialValue = 50, allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -36,13 +36,6 @@ public class Category implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "parent_category_id")
-    private Long parentCategoryId;
-
-    @NotNull
-    @Column(name = "is_hidden", nullable = false)
-    private Boolean isHidden = false;
-
     @NotNull
     @Column(name = "creation_date", nullable = false)
     private Instant creationDate;
@@ -51,13 +44,8 @@ public class Category implements Serializable {
     @Column(name = "modification_date", nullable = false)
     private Instant modificationDate;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-        name = "category_model",
-        joinColumns = { @JoinColumn(name = "category_id") },
-        inverseJoinColumns = { @JoinColumn(name = "model_id") }
-    )
-    private Set<ProductModel> models = new HashSet<>();
+    @ManyToMany(mappedBy = "models")
+    private Set<Category> categories = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
@@ -74,7 +62,7 @@ public class Category implements Serializable {
         return this.id;
     }
 
-    public Category id(Long id) {
+    public ProductModel id(Long id) {
         this.setId(id);
         return this;
     }
@@ -87,7 +75,7 @@ public class Category implements Serializable {
         return this.code;
     }
 
-    public Category code(String code) {
+    public ProductModel code(String code) {
         this.setCode(code);
         return this;
     }
@@ -100,7 +88,7 @@ public class Category implements Serializable {
         return this.name;
     }
 
-    public Category name(String name) {
+    public ProductModel name(String name) {
         this.setName(name);
         return this;
     }
@@ -113,7 +101,7 @@ public class Category implements Serializable {
         return this.description;
     }
 
-    public Category description(String description) {
+    public ProductModel description(String description) {
         this.setDescription(description);
         return this;
     }
@@ -122,37 +110,11 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public Long getParentCategoryId() {
-        return this.parentCategoryId;
-    }
-
-    public Category parentCategoryCode(Long parentCategoryCode) {
-        this.setParentCategoryId(parentCategoryCode);
-        return this;
-    }
-
-    public void setParentCategoryId(Long parentCategoryCode) {
-        this.parentCategoryId = parentCategoryCode;
-    }
-
-    public Boolean getIsHidden() {
-        return this.isHidden;
-    }
-
-    public Category is_hidden(Boolean is_hidden) {
-        this.setIsHidden(is_hidden);
-        return this;
-    }
-
-    public void setIsHidden(Boolean is_hidden) {
-        this.isHidden = is_hidden;
-    }
-
     public Instant getCreationDate() {
         return this.creationDate;
     }
 
-    public Category creation_date(Instant creation_date) {
+    public ProductModel creation_date(Instant creation_date) {
         this.setCreationDate(creation_date);
         return this;
     }
@@ -165,7 +127,7 @@ public class Category implements Serializable {
         return this.modificationDate;
     }
 
-    public Category modification_date(Instant modification_date) {
+    public ProductModel modification_date(Instant modification_date) {
         this.setModificationDate(modification_date);
         return this;
     }
@@ -174,15 +136,15 @@ public class Category implements Serializable {
         this.modificationDate = modification_date;
     }
 
-    public Set<ProductModel> getModels() {
-        return models;
+    public Set<Category> getCategories() {
+        return categories;
     }
 
-    public void setModels(Set<ProductModel> projects) {
-        this.models = projects;
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
-// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
 
     @Override
@@ -191,9 +153,9 @@ public class Category implements Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Category category = (Category) o;
+        ProductModel that = (ProductModel) o;
 
-        return new EqualsBuilder().append(id, category.id).isEquals();
+        return new EqualsBuilder().append(id, that.id).isEquals();
     }
 
     @Override
@@ -204,13 +166,11 @@ public class Category implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Category{" +
+        return "ProductModel{" +
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", parentCategoryCode=" + getParentCategoryId() +
-            ", isHidden='" + getIsHidden() + "'" +
             ", creationDate='" + getCreationDate() + "'" +
             ", modificationDate='" + getModificationDate() + "'" +
             "}";

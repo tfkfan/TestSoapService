@@ -1,25 +1,24 @@
 package com.tfkfan.service;
 
 import com.tfkfan.domain.Category;
-import java.util.Optional;
-
-import com.tfkfan.webservices.types.CreateCategoryRequest;
-import com.tfkfan.webservices.types.FindCategoriesRequest;
-import com.tfkfan.webservices.types.UpdateCategoryRequest;
+import com.tfkfan.domain.ProductModel;
+import com.tfkfan.webservices.types.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 /**
- * Service Interface for managing {@link Category}.
+ * Service Interface for managing {@link ProductModel}.
  */
-public interface CategoryService extends PageableService{
+public interface ProductModelService {
     /**
      * Save a request.
      *
      * @param request the entity to save.
      * @return the persisted entity.
      */
-    Category save(CreateCategoryRequest request);
+    ProductModel save(CreateModelRequest request);
 
     /**
      * Partially updates a category.
@@ -27,7 +26,7 @@ public interface CategoryService extends PageableService{
      * @param request the entity to update partially.
      * @return the persisted entity.
      */
-    Category update(UpdateCategoryRequest request);
+    ProductModel update(UpdateModelRequest request);
 
     /**
      * Get all the categories.
@@ -35,15 +34,10 @@ public interface CategoryService extends PageableService{
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<Category> findAll(Pageable pageable);
+    Page<ProductModel> findAll(Pageable pageable);
 
-    /**
-     * Get all the categories.
-     *
-     * @param request the request information.
-     * @return the list of entities.
-     */
-    Page<Category> findAll(FindCategoriesRequest request);
+
+    Page<ProductModel> findAll(FindModelsRequest request);
 
     /**
      * Get the "id" category.
@@ -51,7 +45,7 @@ public interface CategoryService extends PageableService{
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<Category> findOne(Long id);
+    Optional<ProductModel> findOne(Long id);
 
     /**
      * Delete the "id" category.

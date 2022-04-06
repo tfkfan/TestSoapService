@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified">
+    <xsd:include schemaLocation="../xsd/page.xsd"/>
+    <xsd:include schemaLocation="../xsd/core.xsd"/>
+    <xsd:element name="CreateCategoryRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="code" type="xsd:string"/>
+                <xsd:element name="name" type="xsd:string"/>
+                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="parentCategoryCode" type="xsd:string" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="CreateCategoryResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="category" type="Category"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="UpdateCategoryRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="code" type="xsd:string"/>
+                <xsd:element name="name" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="parentCategoryCode" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="isHidden" type="xsd:boolean" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="UpdateCategoryResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="category" type="Category"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="FindCategoriesRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="codes" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="name" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="parentCategoryCodes" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="isHidden" type="xsd:boolean" minOccurs="0"/>
+                <xsd:element name="onlyParent" type="xsd:boolean" minOccurs="0"/>
+                <xsd:element name="pageSettings" type="PageSettings" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="FindCategoriesResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="categories" type="Categories"/>
+                <xsd:element name="pageInfo" type="PageInfo"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

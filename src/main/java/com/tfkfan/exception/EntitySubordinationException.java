@@ -1,7 +1,7 @@
 package com.tfkfan.exception;
 
-import com.tfkfan.webservices.categoryservice.BaseFault;
-import com.tfkfan.webservices.categoryservice.Fault;
+import com.tfkfan.webservices.types.BaseFault;
+import com.tfkfan.webservices.types.Fault;
 
 /**
  * @author Baltser Artem tfkfan
@@ -32,7 +32,7 @@ public class EntitySubordinationException extends EntityTypeDefinedException {
     }
     @Override
     public BaseFault convert() {
-        com.tfkfan.webservices.categoryservice.EntitySubordinationException fault = new com.tfkfan.webservices.categoryservice.EntitySubordinationException();
+        com.tfkfan.webservices.types.EntitySubordinationException fault = new com.tfkfan.webservices.types.EntitySubordinationException();
         fault.setEntityType(getEntityType());
         fault.setMessage(getMessage());
         return fault;

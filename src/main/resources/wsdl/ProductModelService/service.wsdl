@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:tns="http://com/tfkfan/webservices/types"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://com/tfkfan/webservices/types">
+    <wsdl:types>
+        <xsd:schema xmlns="http://com/tfkfan/webservices/types"
+                    targetNamespace="http://com/tfkfan/webservices/types"
+                    elementFormDefault="qualified" attributeFormDefault="unqualified">
+            <xsd:include schemaLocation="../xsd/exception.xsd"/>
+            <xsd:include schemaLocation="service.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="CreateModelRequest">
+        <wsdl:part element="tns:CreateModelRequest" name="createModelRequest" />
+    </wsdl:message>
+    <wsdl:message name="CreateModelResponse">
+        <wsdl:part element="tns:CreateModelResponse" name="createModelResponse" />
+    </wsdl:message>
+    <wsdl:message name="UpdateModelRequest">
+        <wsdl:part element="tns:UpdateModelRequest" name="updateModelRequest" />
+    </wsdl:message>
+    <wsdl:message name="UpdateModelResponse">
+        <wsdl:part element="tns:UpdateModelResponse" name="updateModelResponse" />
+    </wsdl:message>
+    <wsdl:message name="FindModelsRequest">
+        <wsdl:part element="tns:FindModelsRequest" name="findModelsRequest" />
+    </wsdl:message>
+    <wsdl:message name="FindModelsResponse">
+        <wsdl:part element="tns:FindModelsResponse" name="findModelsResponse" />
+    </wsdl:message>
+    <wsdl:message name="Fault">
+        <wsdl:part name="fault" element="tns:fault"/>
+    </wsdl:message>
+    <wsdl:portType name="ProductModelServicePorts">
+        <wsdl:operation name="CreateModel">
+            <wsdl:input message="tns:CreateModelRequest" />
+            <wsdl:output message="tns:CreateModelResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateModel">
+            <wsdl:input message="tns:UpdateModelRequest" />
+            <wsdl:output message="tns:UpdateModelResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="FindModels">
+            <wsdl:input message="tns:FindModelsRequest" />
+            <wsdl:output message="tns:FindModelsResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ProductModelServiceSoapBinding" type="tns:ProductModelServicePorts">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="CreateModel">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateModel">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="FindModels">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ProductModelService">
+        <wsdl:port binding="tns:ProductModelServiceSoapBinding" name="ProductModelServicePorts">
+            <soap:address
+                location="http://localhost:8080/categoryservice" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

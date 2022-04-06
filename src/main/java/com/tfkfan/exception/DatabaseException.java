@@ -1,6 +1,6 @@
 package com.tfkfan.exception;
 
-import com.tfkfan.webservices.categoryservice.BaseFault;
+import com.tfkfan.webservices.types.BaseFault;
 
 /**
  * @author Baltser Artem tfkfan
@@ -32,7 +32,7 @@ public class DatabaseException extends ScenarioException{
 
     @Override
     public BaseFault convert() {
-        com.tfkfan.webservices.categoryservice.DatabaseException fault = new com.tfkfan.webservices.categoryservice.DatabaseException();
+        com.tfkfan.webservices.types.DatabaseException fault = new com.tfkfan.webservices.types.DatabaseException();
         fault.setScenario(getScenario());
         fault.setMessage(getMessage());
         return fault;

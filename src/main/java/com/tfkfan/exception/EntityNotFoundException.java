@@ -1,7 +1,7 @@
 package com.tfkfan.exception;
 
-import com.tfkfan.webservices.categoryservice.BaseFault;
-import com.tfkfan.webservices.categoryservice.Fault;
+import com.tfkfan.webservices.types.BaseFault;
+import com.tfkfan.webservices.types.Fault;
 import org.apache.cxf.Bus;
 
 /**
@@ -33,7 +33,7 @@ public class EntityNotFoundException extends EntityTypeDefinedException{
 
     @Override
     public BaseFault convert() {
-        com.tfkfan.webservices.categoryservice.EntityNotFoundException fault = new com.tfkfan.webservices.categoryservice.EntityNotFoundException();
+        com.tfkfan.webservices.types.EntityNotFoundException fault = new com.tfkfan.webservices.types.EntityNotFoundException();
         fault.setEntityType(getEntityType());
         fault.setMessage(getMessage());
         return fault;

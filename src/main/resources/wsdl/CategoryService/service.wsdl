@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:tns="http://com/tfkfan/webservices/types"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://com/tfkfan/webservices/types">
+    <wsdl:types>
+        <xsd:schema xmlns="http://com/tfkfan/webservices/types"
+                    targetNamespace="http://com/tfkfan/webservices/types"
+                    elementFormDefault="qualified" attributeFormDefault="unqualified">
+            <xsd:include schemaLocation="../xsd/exception.xsd"/>
+            <xsd:include schemaLocation="service.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="CreateCategoryRequest">
+        <wsdl:part element="tns:CreateCategoryRequest" name="createCategoryRequest" />
+    </wsdl:message>
+    <wsdl:message name="CreateCategoryResponse">
+        <wsdl:part element="tns:CreateCategoryResponse" name="createCategoryResponse" />
+    </wsdl:message>
+    <wsdl:message name="UpdateCategoryRequest">
+        <wsdl:part element="tns:UpdateCategoryRequest" name="updateCategoryRequest" />
+    </wsdl:message>
+    <wsdl:message name="UpdateCategoryResponse">
+        <wsdl:part element="tns:UpdateCategoryResponse" name="updateCategoryResponse" />
+    </wsdl:message>
+    <wsdl:message name="FindCategoriesRequest">
+        <wsdl:part element="tns:FindCategoriesRequest" name="findCategoriesRequest" />
+    </wsdl:message>
+    <wsdl:message name="FindCategoriesResponse">
+        <wsdl:part element="tns:FindCategoriesResponse" name="findCategoriesResponse" />
+    </wsdl:message>
+    <wsdl:message name="Fault">
+        <wsdl:part name="fault" element="tns:fault"/>
+    </wsdl:message>
+    <wsdl:portType name="CategoryServicePorts">
+        <wsdl:operation name="CreateCategory">
+            <wsdl:input message="tns:CreateCategoryRequest" />
+            <wsdl:output message="tns:CreateCategoryResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateCategory">
+            <wsdl:input message="tns:UpdateCategoryRequest" />
+            <wsdl:output message="tns:UpdateCategoryResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="FindCategories">
+            <wsdl:input message="tns:FindCategoriesRequest" />
+            <wsdl:output message="tns:FindCategoriesResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CategoryServiceSoapBinding" type="tns:CategoryServicePorts">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="CreateCategory">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateCategory">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="FindCategories">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CategoryService">
+        <wsdl:port binding="tns:CategoryServiceSoapBinding" name="CategoryServicePorts">
+            <soap:address
+                location="http://localhost:8080/categoryservice" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
