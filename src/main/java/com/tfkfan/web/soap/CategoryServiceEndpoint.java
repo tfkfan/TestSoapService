@@ -1,7 +1,6 @@
 package com.tfkfan.web.soap;
 
 import com.tfkfan.domain.Category;
-import com.tfkfan.exception.EntityNotFoundException;
 import com.tfkfan.service.CategoryService;
 import com.tfkfan.web.soap.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
@@ -12,18 +11,18 @@ import com.tfkfan.webservices.categoryservice.*;
  */
 @Service
 public class CategoryServiceEndpoint implements CategoryServicePorts {
-    private final CategoryMapper categoryMapper;
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryServiceEndpoint(CategoryMapper categoryMapper, CategoryService categoryService) {
-        this.categoryMapper = categoryMapper;
+    public CategoryServiceEndpoint(CategoryService categoryService, CategoryMapper categoryMapper) {
         this.categoryService = categoryService;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
     public CreateCategoryResponse createCategory(CreateCategoryRequest parameters) {
-        Category category = categoryMapper.toEntity(parameters);
-        category = categoryService.save(category);
+
+        Category category = categoryService.save(parameters);
 
         ObjectFactory objectFactory = new ObjectFactory();
         CreateCategoryResponse response = objectFactory.createCreateCategoryResponse();

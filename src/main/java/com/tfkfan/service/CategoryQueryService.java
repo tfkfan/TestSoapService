@@ -5,6 +5,7 @@ import com.tfkfan.domain.Category;
 import com.tfkfan.repository.CategoryRepository;
 import com.tfkfan.service.criteria.CategoryCriteria;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,13 @@ public class CategoryQueryService extends QueryService<Category> {
         return categoryRepository.findAll(specification);
     }
 
+
+    @Transactional(readOnly = true)
+    public Optional<Category> findOneByCriteria(CategoryCriteria criteria) {
+        log.debug("find one by criteria : {}", criteria);
+        final Specification<Category> specification = createSpecification(criteria);
+        return categoryRepository.findOne(specification);
+    }
     /**
      * Return a {@link Page} of {@link Category} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
@@ -94,8 +102,8 @@ public class CategoryQueryService extends QueryService<Category> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Category_.description));
             }
-            if (criteria.getParentCategoryCode() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getParentCategoryCode(), Category_.parentCategoryCode));
+            if (criteria.getParentCategoryId() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getParentCategoryId(), Category_.parentCategoryId));
             }
             if (criteria.getIsHidden() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsHidden(), Category_.isHidden));

@@ -1,15 +1,26 @@
 package com.tfkfan.service.impl;
 
 import com.tfkfan.domain.Category;
+import com.tfkfan.exception.EntityAlreadyExists;
+import com.tfkfan.exception.EntityNotFoundException;
+import com.tfkfan.exception.EntitySubordinationException;
 import com.tfkfan.repository.CategoryRepository;
+import com.tfkfan.service.CategoryQueryService;
 import com.tfkfan.service.CategoryService;
+
 import java.util.Optional;
+
+import com.tfkfan.service.criteria.CategoryCriteria;
+import com.tfkfan.web.soap.mapper.CategoryMapper;
+import com.tfkfan.webservices.categoryservice.CreateCategoryRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service Implementation for managing {@link Category}.
@@ -19,16 +30,40 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
-
+    private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
+    private final CategoryQueryService categoryQueryService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryMapper categoryMapper, CategoryRepository categoryRepository, CategoryQueryService categoryQueryService) {
+        this.categoryMapper = categoryMapper;
         this.categoryRepository = categoryRepository;
+        this.categoryQueryService = categoryQueryService;
     }
 
     @Override
-    public Category save(Category category) {
-        log.debug("Request to save Category : {}", category);
+    public Category save(CreateCategoryRequest request) {
+        log.debug("Request to save Category : {}", request);
+        if (request.getCode().equals(request.getParentCategoryCode()))
+            throw new EntitySubordinationException(Category.ENTITY_NAME);
+
+        CategoryCriteria criteria = new CategoryCriteria();
+        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()));
+        criteria.setParentCategoryId((LongFilter) new LongFilter().setEquals(null));
+
+        Category parent = categoryQueryService
+            .findOneByCriteria(criteria)
+            .orElseThrow(() -> new EntityNotFoundException(Category.ENTITY_NAME));
+
+        criteria = new CategoryCriteria();
+        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
+
+        categoryQueryService.findOneByCriteria(criteria).ifPresent((e) -> {
+            throw new EntityAlreadyExists(Category.ENTITY_NAME);
+        });
+
+        Category category = categoryMapper.toEntity(request);
+        category.setParentCategoryId(parent.getId());
+
         return categoryRepository.save(category);
     }
 
@@ -48,8 +83,8 @@ public class CategoryServiceImpl implements CategoryService {
                 if (category.getDescription() != null) {
                     existingCategory.setDescription(category.getDescription());
                 }
-                if (category.getParentCategoryCode() != null) {
-                    existingCategory.setParentCategoryCode(category.getParentCategoryCode());
+                if (category.getParentCategoryId() != null) {
+                    existingCategory.setParentCategoryId(category.getParentCategoryId());
                 }
                 if (category.getIsHidden() != null) {
                     existingCategory.setIsHidden(category.getIsHidden());

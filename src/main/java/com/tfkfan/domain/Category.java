@@ -11,12 +11,12 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name = "category")
 public class Category implements Serializable {
-
+    public static final String ENTITY_NAME = "category";
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
+    @SequenceGenerator(name = "category_sequence")
     @Column(name = "id")
     private Long id;
 
@@ -32,7 +32,7 @@ public class Category implements Serializable {
     private String description;
 
     @Column(name = "parent_category_id")
-    private Long parentCategoryCode;
+    private Long parentCategoryId;
 
     @NotNull
     @Column(name = "is_hidden", nullable = false)
@@ -109,17 +109,17 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public Long getParentCategoryCode() {
-        return this.parentCategoryCode;
+    public Long getParentCategoryId() {
+        return this.parentCategoryId;
     }
 
     public Category parentCategoryCode(Long parentCategoryCode) {
-        this.setParentCategoryCode(parentCategoryCode);
+        this.setParentCategoryId(parentCategoryCode);
         return this;
     }
 
-    public void setParentCategoryCode(Long parentCategoryCode) {
-        this.parentCategoryCode = parentCategoryCode;
+    public void setParentCategoryId(Long parentCategoryCode) {
+        this.parentCategoryId = parentCategoryCode;
     }
 
     public Boolean getIsHidden() {
@@ -188,7 +188,7 @@ public class Category implements Serializable {
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", parentCategoryCode=" + getParentCategoryCode() +
+            ", parentCategoryCode=" + getParentCategoryId() +
             ", isHidden='" + getIsHidden() + "'" +
             ", creationDate='" + getCreationDate() + "'" +
             ", modificationDate='" + getModificationDate() + "'" +

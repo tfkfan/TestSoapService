@@ -134,7 +134,7 @@ class CategoryResourceIT {
         assertThat(testCategory.getCode()).isEqualTo(DEFAULT_CODE);
         assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testCategory.getParentCategoryCode()).isEqualTo(DEFAULT_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParentCategoryId()).isEqualTo(DEFAULT_PARENT_CATEGORY_CODE);
         assertThat(testCategory.getParent_category_id()).isEqualTo(DEFAULT_PARENT_CATEGORY_ID);
         assertThat(testCategory.getIsHidden()).isEqualTo(DEFAULT_IS_HIDDEN);
         assertThat(testCategory.getCreationDate()).isEqualTo(DEFAULT_CREATION_DATE);
@@ -993,7 +993,7 @@ class CategoryResourceIT {
         assertThat(testCategory.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParentCategoryId()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
         assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
         assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
         assertThat(testCategory.getCreationDate()).isEqualTo(UPDATED_CREATION_DATE);
@@ -1089,7 +1089,7 @@ class CategoryResourceIT {
         assertThat(testCategory.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParentCategoryId()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
         assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
         assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
         assertThat(testCategory.getCreationDate()).isEqualTo(DEFAULT_CREATION_DATE);
@@ -1133,7 +1133,7 @@ class CategoryResourceIT {
         assertThat(testCategory.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCategory.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testCategory.getParentCategoryCode()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
+        assertThat(testCategory.getParentCategoryId()).isEqualTo(UPDATED_PARENT_CATEGORY_CODE);
         assertThat(testCategory.getParent_category_id()).isEqualTo(UPDATED_PARENT_CATEGORY_ID);
         assertThat(testCategory.getIsHidden()).isEqualTo(UPDATED_IS_HIDDEN);
         assertThat(testCategory.getCreationDate()).isEqualTo(UPDATED_CREATION_DATE);

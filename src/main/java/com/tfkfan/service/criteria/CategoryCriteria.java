@@ -30,7 +30,7 @@ public class CategoryCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private LongFilter parentCategoryCode;
+    private LongFilter parentCategoryId;
 
     private BooleanFilter isHidden;
 
@@ -47,7 +47,7 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.code = other.code == null ? null : other.code.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
-        this.parentCategoryCode = other.parentCategoryCode == null ? null : other.parentCategoryCode.copy();
+        this.parentCategoryId = other.parentCategoryId == null ? null : other.parentCategoryId.copy();
         this.isHidden = other.isHidden == null ? null : other.isHidden.copy();
         this.creationDate = other.creationDate == null ? null : other.creationDate.copy();
         this.modificationDate = other.modificationDate == null ? null : other.modificationDate.copy();
@@ -78,7 +78,7 @@ public class CategoryCriteria implements Serializable, Criteria {
         return code;
     }
 
-    public StringFilter code() {
+    public StringFilter code(StringFilter code) {
         if (code == null) {
             code = new StringFilter();
         }
@@ -119,19 +119,19 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public LongFilter getParentCategoryCode() {
-        return parentCategoryCode;
+    public LongFilter getParentCategoryId() {
+        return parentCategoryId;
     }
 
     public LongFilter parentCategoryCode() {
-        if (parentCategoryCode == null) {
-            parentCategoryCode = new LongFilter();
+        if (parentCategoryId == null) {
+            parentCategoryId = new LongFilter();
         }
-        return parentCategoryCode;
+        return parentCategoryId;
     }
 
-    public void setParentCategoryCode(LongFilter parentCategoryCode) {
-        this.parentCategoryCode = parentCategoryCode;
+    public void setParentCategoryId(LongFilter parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
     }
 
     public BooleanFilter getIsHidden() {
@@ -201,7 +201,7 @@ public class CategoryCriteria implements Serializable, Criteria {
             Objects.equals(code, that.code) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(parentCategoryCode, that.parentCategoryCode) &&
+            Objects.equals(parentCategoryId, that.parentCategoryId) &&
             Objects.equals(isHidden, that.isHidden) &&
             Objects.equals(creationDate, that.creationDate) &&
             Objects.equals(modificationDate, that.modificationDate) &&
@@ -216,7 +216,7 @@ public class CategoryCriteria implements Serializable, Criteria {
             code,
             name,
             description,
-            parentCategoryCode,
+            parentCategoryId,
             isHidden,
             creationDate,
             modificationDate,
@@ -232,7 +232,7 @@ public class CategoryCriteria implements Serializable, Criteria {
             (code != null ? "code=" + code + ", " : "") +
             (name != null ? "name=" + name + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
-            (parentCategoryCode != null ? "parentCategoryCode=" + parentCategoryCode + ", " : "") +
+            (parentCategoryId != null ? "parentCategoryCode=" + parentCategoryId + ", " : "") +
             (isHidden != null ? "is_hidden=" + isHidden + ", " : "") +
             (creationDate != null ? "creation_date=" + creationDate + ", " : "") +
             (modificationDate != null ? "modification_date=" + modificationDate + ", " : "") +

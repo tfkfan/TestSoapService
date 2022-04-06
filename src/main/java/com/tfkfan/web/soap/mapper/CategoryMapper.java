@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
  */
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
+    @Mapping(target = "parentCategoryCode", ignore = true)
     Category toEntity(CreateCategoryRequest request);
     com.tfkfan.webservices.categoryservice.Category toDto(Category category);
 }

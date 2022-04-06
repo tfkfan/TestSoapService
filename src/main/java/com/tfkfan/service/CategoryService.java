@@ -2,6 +2,8 @@ package com.tfkfan.service;
 
 import com.tfkfan.domain.Category;
 import java.util.Optional;
+
+import com.tfkfan.webservices.categoryservice.CreateCategoryRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,12 +12,12 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CategoryService {
     /**
-     * Save a category.
+     * Save a request.
      *
-     * @param category the entity to save.
+     * @param request the entity to save.
      * @return the persisted entity.
      */
-    Category save(Category category);
+    Category save(CreateCategoryRequest request);
 
     /**
      * Partially updates a category.
