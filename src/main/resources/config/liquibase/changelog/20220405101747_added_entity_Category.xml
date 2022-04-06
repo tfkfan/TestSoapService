@@ -45,6 +45,11 @@
     </changeSet>
 
     <changeSet id="20220405101747-3" author="tfkfan">
-        <s
+            <loadData
+                file="config/liquibase/initial-data/category.csv"
+                separator=";"
+                tableName="category"
+                usePreparedStatements="true">
+            </loadData>
     </changeSet>
 </databaseChangeLog>

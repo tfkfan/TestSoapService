@@ -19,25 +19,21 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "parentCategoryCode",
+      "fieldName": "parentCategoryId",
       "fieldType": "Long"
     },
     {
-      "fieldName": "parent_category_id",
-      "fieldType": "Long"
-    },
-    {
-      "fieldName": "is_hidden",
+      "fieldName": "isHidden",
       "fieldType": "Boolean",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "creation_date",
+      "fieldName": "creationDate",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "modification_date",
+      "fieldName": "modificationDate",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     }
