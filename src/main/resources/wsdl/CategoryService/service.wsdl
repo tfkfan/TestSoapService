@@ -85,6 +85,7 @@
                 <soap:fault name="fault" use="literal"/>
             </wsdl:fault>
         </wsdl:operation>
+
     </wsdl:binding>
     <wsdl:service name="CategoryService">
         <wsdl:port binding="tns:CategoryServiceSoapBinding" name="CategoryServicePorts">

@@ -6,7 +6,7 @@ import com.tfkfan.exception.EntityNotFoundException;
 import com.tfkfan.exception.EntitySubordinationException;
 import com.tfkfan.repository.CategoryRepository;
 import com.tfkfan.service.criteria.CategoryQueryService;
-import com.tfkfan.service.CategoryService;
+import com.tfkfan.service.CategoryApiService;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tfkfan.service.criteria.model.CategoryCriteria;
-import com.tfkfan.web.soap.mapper.CategoryMapper;
+import com.tfkfan.mapper.CategoryMapper;
 import com.tfkfan.webservices.types.CreateCategoryRequest;
 import com.tfkfan.webservices.types.FindCategoriesRequest;
 import com.tfkfan.webservices.types.UpdateCategoryRequest;
@@ -33,17 +33,17 @@ import tech.jhipster.service.filter.StringFilter;
  */
 @Service
 @Transactional
-public class CategoryServiceImpl extends BasePageableServiceImpl implements CategoryService {
+public class CategoryApiServiceImpl extends BasePageableServiceImpl implements CategoryApiService {
+    private final Logger log = LoggerFactory.getLogger(CategoryApiServiceImpl.class);
 
-    private final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
-    private final CategoryMapper categoryMapper;
-    private final CategoryRepository categoryRepository;
-    private final CategoryQueryService categoryQueryService;
+    private final CategoryMapper mapper;
+    private final CategoryRepository repository;
+    private final CategoryQueryService queryService;
 
-    public CategoryServiceImpl(CategoryMapper categoryMapper, CategoryRepository categoryRepository, CategoryQueryService categoryQueryService) {
-        this.categoryMapper = categoryMapper;
-        this.categoryRepository = categoryRepository;
-        this.categoryQueryService = categoryQueryService;
+    public CategoryApiServiceImpl(CategoryMapper mapper, CategoryRepository repository, CategoryQueryService queryService) {
+        this.mapper = mapper;
+        this.repository = repository;
+        this.queryService = queryService;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
             criteria.setCode((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()));
             criteria.setParentCategoryId((LongFilter) new LongFilter().setEquals(null));
 
-            parent = categoryQueryService
+            parent = queryService
                 .findOneByCriteria(criteria)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Родительская категория с кодом %s не найдена", request.getParentCategoryCode())
                     , Category.ENTITY_NAME));
@@ -69,16 +69,16 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
         CategoryCriteria criteria = new CategoryCriteria();
         criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
 
-        categoryQueryService.findOneByCriteria(criteria).ifPresent((e) -> {
+        queryService.findOneByCriteria(criteria).ifPresent((e) -> {
             throw new EntityAlreadyExistsException(String.format("Категория с кодом %s уже существует", request.getCode()), Category.ENTITY_NAME);
         });
 
-        Category category = categoryMapper.toEntity(request);
+        Category category = mapper.toEntity(request);
 
         if (Objects.nonNull(parent))
             category.setParentCategoryId(parent.getId());
 
-        return categoryRepository.save(category);
+        return repository.save(category);
     }
 
     @Override
@@ -88,9 +88,9 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
         CategoryCriteria criteria = new CategoryCriteria();
         criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
 
-        Category entity = categoryQueryService
+        Category entity = queryService
             .findOneByCriteria(criteria)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Категория с кодом %s не найдена", request.getCode())));
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Категория с кодом %s не найдена", request.getCode()), Category.ENTITY_NAME));
 
         if (!StringUtils.isEmpty(request.getParentCategoryCode()) && entity.getCode().equals(request.getParentCategoryCode()))
             throw new EntitySubordinationException("Категория не может являться родительской по отношению к самой себе",
@@ -102,7 +102,7 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
             criteria.setCode((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()));
             criteria.setParentCategoryIdNull(true);
 
-            parent = categoryQueryService
+            parent = queryService
                 .findOneByCriteria(criteria)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Родительская категория с кодом %s не найдена", request.getParentCategoryCode())
                     , Category.ENTITY_NAME));
@@ -117,14 +117,14 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
 
         entity.setDescription(request.getDescription());
 
-        return categoryRepository.save(entity);
+        return repository.save(entity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Category> findAll(Pageable pageable) {
         log.debug("Request to get all Categories");
-        return categoryRepository.findAll(pageable);
+        return repository.findAll(pageable);
     }
 
     @Override
@@ -137,11 +137,11 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
             CategoryCriteria criteria = new CategoryCriteria();
             criteria.code((StringFilter) new StringFilter().setIn(request.getParentCategoryCodes()));
             criteria.setParentCategoryIdNull(true);
-            List<Category> parentCategories = categoryQueryService.findByCriteria(criteria);
+            List<Category> parentCategories = queryService.findByCriteria(criteria);
 
             criteria = new CategoryCriteria();
             criteria.setParentCategoryId((LongFilter) new LongFilter().setIn(parentCategories.stream().map(Category::getId).collect(Collectors.toList())));
-            request.getCodes().addAll(categoryQueryService
+            request.getCodes().addAll(queryService
                 .findByCriteria(criteria)
                 .stream()
                 .map(Category::getCode)
@@ -151,28 +151,36 @@ public class CategoryServiceImpl extends BasePageableServiceImpl implements Cate
         CategoryCriteria criteria = new CategoryCriteria();
         if (!request.getCodes().isEmpty())
             criteria.setCode((StringFilter) new StringFilter().setIn(request.getCodes()));
-        if(!StringUtils.isEmpty(request.getName()))
+        if (!StringUtils.isEmpty(request.getName()))
             criteria.setName(new StringFilter().setContains(request.getName()));
-        if(!StringUtils.isEmpty(request.getDescription()))
+        if (!StringUtils.isEmpty(request.getDescription()))
             criteria.setDescription(new StringFilter().setContains(request.getDescription()));
-        if(Objects.nonNull(request.isIsHidden()))
+        if (Objects.nonNull(request.isIsHidden()))
             criteria.setIsHidden((BooleanFilter) new BooleanFilter().setEquals(request.isIsHidden()));
-        if(Objects.nonNull(request.isOnlyParent()))
+        if (Objects.nonNull(request.isOnlyParent()))
             criteria.setParentCategoryIdNull(true);
 
-        return categoryQueryService.findByCriteria(criteria, pageable);
+        return queryService.findByCriteria(criteria, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Category> findOne(Long id) {
         log.debug("Request to get Category : {}", id);
-        return categoryRepository.findById(id);
+        return repository.findById(id);
+    }
+
+    @Override
+    public Optional<Category> findOneByCode(String code) {
+        log.debug("Request to get Category by code: {}", code);
+        CategoryCriteria criteria = new CategoryCriteria();
+        criteria.setCode((StringFilter) new StringFilter().setEquals(code));
+        return queryService.findOneByCriteria(criteria);
     }
 
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Category : {}", id);
-        categoryRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

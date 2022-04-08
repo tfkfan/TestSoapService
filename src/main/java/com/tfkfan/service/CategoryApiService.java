@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing {@link Category}.
  */
-public interface CategoryService extends PageableService{
+public interface CategoryApiService extends PageableService{
     /**
      * Save a request.
      *
@@ -52,6 +52,14 @@ public interface CategoryService extends PageableService{
      * @return the entity.
      */
     Optional<Category> findOne(Long id);
+
+    /**
+     * Get the "code" category.
+     *
+     * @param code the code of the entity.
+     * @return the entity.
+     */
+    Optional<Category> findOneByCode(String code);
 
     /**
      * Delete the "id" category.

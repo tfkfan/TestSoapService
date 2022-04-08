@@ -7,8 +7,8 @@ services:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://testsoapservice-postgresql:5432/TestSoapService
-      - SPRING_LIQUIBASE_URL=jdbc:postgresql://testsoapservice-postgresql:5432/TestSoapService
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://testsoapservice-postgresql:5432/test_service
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://testsoapservice-postgresql:5432/test_service
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
       - JAVA_OPTS=-Djgroups.tcp.address=NON_LOOPBACK -Djava.net.preferIPv4Stack=true
   testsoapservice-postgresql:
@@ -16,8 +16,9 @@ services:
     # volumes:
     #   - ~/volumes/jhipster/TestSoapService/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=TestSoapService
-      - POSTGRES_PASSWORD=
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=test_service
       - POSTGRES_HOST_AUTH_METHOD=trust
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix

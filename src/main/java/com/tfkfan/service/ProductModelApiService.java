@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * Service Interface for managing {@link ProductModel}.
  */
-public interface ProductModelService {
+public interface ProductModelApiService {
     /**
      * Save a request.
      *
@@ -21,7 +21,7 @@ public interface ProductModelService {
     ProductModel save(CreateModelRequest request);
 
     /**
-     * Partially updates a category.
+     * updates a model.
      *
      * @param request the entity to update partially.
      * @return the persisted entity.
@@ -29,7 +29,7 @@ public interface ProductModelService {
     ProductModel update(UpdateModelRequest request);
 
     /**
-     * Get all the categories.
+     * Get all the models.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
@@ -40,7 +40,7 @@ public interface ProductModelService {
     Page<ProductModel> findAll(FindModelsRequest request);
 
     /**
-     * Get the "id" category.
+     * Get the "id" model.
      *
      * @param id the id of the entity.
      * @return the entity.
@@ -48,7 +48,15 @@ public interface ProductModelService {
     Optional<ProductModel> findOne(Long id);
 
     /**
-     * Delete the "id" category.
+     * Get the "code" model.
+     *
+     * @param code the code of the entity.
+     * @return the entity.
+     */
+    Optional<ProductModel> findOneByCode(String code);
+
+    /**
+     * Delete the "id" model.
      *
      * @param id the id of the entity.
      */

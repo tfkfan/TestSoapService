@@ -25,7 +25,8 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>18</java.version>
+        <java.version>17</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
@@ -75,7 +76,7 @@
         <git-commit-id-plugin.version>5.0.0</git-commit-id-plugin.version>
         <modernizer-maven-plugin.version>2.3.0</modernizer-maven-plugin.version>
         <jib-maven-plugin.version>3.2.0</jib-maven-plugin.version>
-        <jib-maven-plugin.image>eclipse-temurin:11-jre-focal</jib-maven-plugin.image>
+        <jib-maven-plugin.image>eclipse-temurin:17-jre-focal</jib-maven-plugin.image>
         <jib-maven-plugin.architecture>amd64</jib-maven-plugin.architecture>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
@@ -421,12 +422,14 @@
                             <wsdlOptions>
                                 <wsdlOption>
                                     <wsdl>${basedir}/src/main/resources/wsdl/CategoryService/service.wsdl</wsdl>
+                                    <wsdlLocation>classpath:wsdl/CategoryService/service.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
                                     </extraargs>
                                 </wsdlOption>
                                 <wsdlOption>
                                     <wsdl>${basedir}/src/main/resources/wsdl/ProductModelService/service.wsdl</wsdl>
+                                    <wsdlLocation>classpath:wsdl/ProductModelService/service.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
                                     </extraargs>

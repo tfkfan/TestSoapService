@@ -1,4 +1,4 @@
-package com.tfkfan.web.soap.mapper;
+package com.tfkfan.mapper;
 
 import com.tfkfan.domain.ProductModel;
 import com.tfkfan.webservices.types.*;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface ProductModelMapper extends BaseMapper<ProductModel, com.tfkfan.webservices.types.ProductModel>{
-    ProductModel toEntity(CreateModelRequest request);
+    com.tfkfan.domain.ProductModel toEntity(CreateModelRequest request);
 
     List<com.tfkfan.webservices.types.ProductModel> toDtos(List<ProductModel> entities);
 
@@ -28,7 +28,7 @@ public interface ProductModelMapper extends BaseMapper<ProductModel, com.tfkfan.
         ProductModels models = new ProductModels();
         models.setModel(toDtos(page.getContent()));
         resp.setPageInfo(pageInfo(page));
-
+        resp.setModels(models);
         return resp;
     }
 }

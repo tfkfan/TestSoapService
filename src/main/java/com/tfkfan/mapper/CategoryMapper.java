@@ -1,4 +1,4 @@
-package com.tfkfan.web.soap.mapper;
+package com.tfkfan.mapper;
 
 import com.tfkfan.domain.Category;
 import com.tfkfan.webservices.types.*;
@@ -29,7 +29,7 @@ public interface CategoryMapper extends BaseMapper<Category, com.tfkfan.webservi
         Categories categories = new Categories();
         categories.setCategory(toDtos(page.getContent()));
         resp.setPageInfo(pageInfo(page));
-
+        resp.setCategories(categories);
         return resp;
     }
 }

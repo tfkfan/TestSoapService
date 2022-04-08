@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -23,6 +24,31 @@ public class CategoryProductModel implements Serializable {
     @EmbeddedId
     private CategoryProductModelPK id;
 
+    @ManyToOne
+    @MapsId("categoryId")
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToOne
+    @MapsId("modelId")
+    @JoinColumn(name = "model_id", nullable = false)
+    private ProductModel model;
+
+
+    public CategoryProductModel() {
+    }
+
+    public CategoryProductModel(CategoryProductModelPK id) {
+        this.id = id;
+    }
+
+    public CategoryProductModel(Category category, ProductModel model) {
+        if (Objects.nonNull(category) && Objects.nonNull(model))
+            this.id = new CategoryProductModelPK(category.getId(), model.getId());
+        this.category = category;
+        this.model = model;
+    }
+
     public CategoryProductModelPK getId() {
         return id;
     }
@@ -30,7 +56,24 @@ public class CategoryProductModel implements Serializable {
     public void setId(CategoryProductModelPK id) {
         this.id = id;
     }
-// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public ProductModel getModel() {
+        return model;
+    }
+
+    public void setModel(ProductModel model) {
+        this.model = model;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
 
     @Override

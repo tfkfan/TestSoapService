@@ -1,6 +1,5 @@
-package com.tfkfan.web.soap.mapper;
+package com.tfkfan.mapper;
 
-import com.tfkfan.domain.Category;
 import com.tfkfan.webservices.types.PageInfo;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;

@@ -30,6 +30,18 @@
     <wsdl:message name="FindModelsResponse">
         <wsdl:part element="tns:FindModelsResponse" name="findModelsResponse" />
     </wsdl:message>
+    <wsdl:message name="LinkCategoryToModelRequest">
+        <wsdl:part element="tns:LinkCategoryToModelRequest" name="linkCategoryToModelRequest" />
+    </wsdl:message>
+    <wsdl:message name="LinkCategoryToModelResponse">
+        <wsdl:part element="tns:LinkCategoryToModelResponse" name="linkCategoryToModelResponse" />
+    </wsdl:message>
+    <wsdl:message name="UnlinkCategoryToModelRequest">
+        <wsdl:part element="tns:UnlinkCategoryToModelRequest" name="unlinkCategoryToModelRequest" />
+    </wsdl:message>
+    <wsdl:message name="UnlinkCategoryToModelResponse">
+        <wsdl:part element="tns:UnlinkCategoryToModelResponse" name="unlinkCategoryToModelResponse" />
+    </wsdl:message>
     <wsdl:message name="Fault">
         <wsdl:part name="fault" element="tns:fault"/>
     </wsdl:message>
@@ -47,6 +59,16 @@
         <wsdl:operation name="FindModels">
             <wsdl:input message="tns:FindModelsRequest" />
             <wsdl:output message="tns:FindModelsResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="LinkCategoryToModel">
+            <wsdl:input message="tns:LinkCategoryToModelRequest" />
+            <wsdl:output message="tns:LinkCategoryToModelResponse" />
+            <wsdl:fault name="fault" message="tns:Fault"/>
+        </wsdl:operation>
+        <wsdl:operation name="UnlinkCategoryToModel">
+            <wsdl:input message="tns:UnlinkCategoryToModelRequest" />
+            <wsdl:output message="tns:UnlinkCategoryToModelResponse" />
             <wsdl:fault name="fault" message="tns:Fault"/>
         </wsdl:operation>
     </wsdl:portType>
@@ -75,6 +97,28 @@
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="FindModels">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LinkCategoryToModel">
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UnlinkCategoryToModel">
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
