@@ -1,7 +1,6 @@
 package com.tfkfan.web.soap;
 
 import com.tfkfan.service.CategoryApiService;
-import com.tfkfan.mapper.CategoryMapper;
 import com.tfkfan.webservices.types.*;
 import org.springframework.stereotype.Service;
 
@@ -11,26 +10,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryServiceEndpoint implements CategoryServicePorts {
     private final CategoryApiService apiService;
-    private final CategoryMapper mapper;
 
-    public CategoryServiceEndpoint(CategoryApiService apiService, CategoryMapper mapper) {
+    public CategoryServiceEndpoint(CategoryApiService apiService) {
         this.apiService = apiService;
-        this.mapper = mapper;
     }
 
     @Override
     public CreateCategoryResponse createCategory(CreateCategoryRequest createCategoryRequest) throws Fault {
-        return mapper.toCreateResponse(apiService.save(createCategoryRequest));
+        return apiService.save(createCategoryRequest);
     }
 
     @Override
     public UpdateCategoryResponse updateCategory(UpdateCategoryRequest updateCategoryRequest) throws Fault {
-        return mapper.toUpdateResponse(apiService.update(updateCategoryRequest));
+        return apiService.update(updateCategoryRequest);
     }
 
     @Override
     public FindCategoriesResponse findCategories(FindCategoriesRequest findCategoriesRequest) throws Fault {
-        return mapper.toFindResponse(apiService.findAll(findCategoriesRequest));
+        return apiService.findAll(findCategoriesRequest);
     }
-
 }

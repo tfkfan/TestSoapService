@@ -12,47 +12,47 @@
             <xsd:include schemaLocation="service.xsd"/>
         </xsd:schema>
     </wsdl:types>
-    <wsdl:message name="CreateModelRequest">
-        <wsdl:part element="tns:CreateModelRequest" name="createModelRequest" />
+    <wsdl:message name="LinkCategoryToModelRequest">
+        <wsdl:part element="tns:LinkCategoryToModelRequest" name="linkCategoryToModelRequest" />
     </wsdl:message>
-    <wsdl:message name="CreateModelResponse">
-        <wsdl:part element="tns:CreateModelResponse" name="createModelResponse" />
+    <wsdl:message name="LinkCategoryToModelResponse">
+        <wsdl:part element="tns:LinkCategoryToModelResponse" name="linkCategoryToModelResponse" />
     </wsdl:message>
-    <wsdl:message name="UpdateModelRequest">
-        <wsdl:part element="tns:UpdateModelRequest" name="updateModelRequest" />
+    <wsdl:message name="UnlinkCategoryToModelRequest">
+        <wsdl:part element="tns:UnlinkCategoryToModelRequest" name="unlinkCategoryToModelRequest" />
     </wsdl:message>
-    <wsdl:message name="UpdateModelResponse">
-        <wsdl:part element="tns:UpdateModelResponse" name="updateModelResponse" />
+    <wsdl:message name="UnlinkCategoryToModelResponse">
+        <wsdl:part element="tns:UnlinkCategoryToModelResponse" name="unlinkCategoryToModelResponse" />
     </wsdl:message>
-    <wsdl:message name="FindModelsRequest">
-        <wsdl:part element="tns:FindModelsRequest" name="findModelsRequest" />
+    <wsdl:message name="FindModelsByCategoryCodeRequest">
+        <wsdl:part element="tns:FindModelsByCategoryCodeRequest" name="findModelsByCategoryCodeRequest" />
     </wsdl:message>
-    <wsdl:message name="FindModelsResponse">
-        <wsdl:part element="tns:FindModelsResponse" name="findModelsResponse" />
+    <wsdl:message name="FindModelsByCategoryCodeResponse">
+        <wsdl:part element="tns:FindModelsByCategoryCodeResponse" name="findModelsByCategoryCodeResponse" />
     </wsdl:message>
     <wsdl:message name="Fault">
         <wsdl:part name="fault" element="tns:fault"/>
     </wsdl:message>
-    <wsdl:portType name="ProductModelServicePorts">
-        <wsdl:operation name="CreateModel">
-            <wsdl:input message="tns:CreateModelRequest" />
-            <wsdl:output message="tns:CreateModelResponse" />
+    <wsdl:portType name="CategoryModelServicePorts">
+        <wsdl:operation name="LinkCategoryToModel">
+            <wsdl:input message="tns:LinkCategoryToModelRequest" />
+            <wsdl:output message="tns:LinkCategoryToModelResponse" />
             <wsdl:fault name="fault" message="tns:Fault"/>
         </wsdl:operation>
-        <wsdl:operation name="UpdateModel">
-            <wsdl:input message="tns:UpdateModelRequest" />
-            <wsdl:output message="tns:UpdateModelResponse" />
+        <wsdl:operation name="UnlinkCategoryToModel">
+            <wsdl:input message="tns:UnlinkCategoryToModelRequest" />
+            <wsdl:output message="tns:UnlinkCategoryToModelResponse" />
             <wsdl:fault name="fault" message="tns:Fault"/>
         </wsdl:operation>
-        <wsdl:operation name="FindModels">
-            <wsdl:input message="tns:FindModelsRequest" />
-            <wsdl:output message="tns:FindModelsResponse" />
+        <wsdl:operation name="FindModelsByCategoryCode">
+            <wsdl:input message="tns:FindModelsByCategoryCodeRequest" />
+            <wsdl:output message="tns:FindModelsByCategoryCodeResponse" />
             <wsdl:fault name="fault" message="tns:Fault"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="ProductModelServiceSoapBinding" type="tns:ProductModelServicePorts">
+    <wsdl:binding name="CategoryModelServiceSoapBinding" type="tns:CategoryModelServicePorts">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
-        <wsdl:operation name="CreateModel">
+        <wsdl:operation name="LinkCategoryToModel">
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -63,7 +63,7 @@
                 <soap:fault name="fault" use="literal"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="UpdateModel">
+        <wsdl:operation name="UnlinkCategoryToModel">
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -74,7 +74,7 @@
                 <soap:fault name="fault" use="literal"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="FindModels">
+        <wsdl:operation name="FindModelsByCategoryCode">
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -86,10 +86,10 @@
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:service name="ProductModelService">
-        <wsdl:port binding="tns:ProductModelServiceSoapBinding" name="ProductModelServicePorts">
+    <wsdl:service name="CategoryModelService">
+        <wsdl:port binding="tns:CategoryModelServiceSoapBinding" name="CategoryModelServicePorts">
             <soap:address
-                location="http://localhost:8080/categoryservice" />
+                location="http://localhost:8080/categorymodelservice" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

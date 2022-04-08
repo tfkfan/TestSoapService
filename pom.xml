@@ -434,6 +434,13 @@
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
                                     </extraargs>
                                 </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/CategoryModelService/service.wsdl</wsdl>
+                                    <wsdlLocation>classpath:wsdl/CategoryModelService/service.wsdl</wsdlLocation>
+                                    <extraargs>
+                                        <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
+                                    </extraargs>
+                                </wsdlOption>
                             </wsdlOptions>
                         </configuration>
                         <goals>

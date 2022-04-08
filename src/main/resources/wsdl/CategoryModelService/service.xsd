@@ -4,54 +4,55 @@
     <xsd:include schemaLocation="../xsd/page.xsd"/>
     <xsd:include schemaLocation="../xsd/core.xsd"/>
 
-    <xsd:element name="CreateModelRequest">
+    <xsd:element name="UnlinkCategoryToModelRequest">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="code" type="xsd:string"/>
-                <xsd:element name="name" type="xsd:string"/>
-                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="categoryCode" type="xsd:string"/>
+                <xsd:element name="modelCode" type="xsd:string"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    <xsd:element name="CreateModelResponse">
+
+    <xsd:element name="UnlinkCategoryToModelResponse">
         <xsd:complexType>
             <xsd:sequence>
+                <xsd:element name="category" type="Category"/>
                 <xsd:element name="model" type="ProductModel"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="UpdateModelRequest">
+    <xsd:element name="LinkCategoryToModelRequest">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="code" type="xsd:string"/>
-                <xsd:element name="name" type="xsd:string" minOccurs="0"/>
-                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="categoryCode" type="xsd:string"/>
+                <xsd:element name="modelCode" type="xsd:string"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    <xsd:element name="UpdateModelResponse">
+
+    <xsd:element name="LinkCategoryToModelResponse">
         <xsd:complexType>
             <xsd:sequence>
+                <xsd:element name="category" type="Category"/>
                 <xsd:element name="model" type="ProductModel"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="FindModelsRequest">
+    <xsd:element name="FindModelsByCategoryCodeRequest">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="codes" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-                <xsd:element name="name" type="xsd:string" minOccurs="0"/>
-                <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="code" type="xsd:string"/>
                 <xsd:element name="pageSettings" type="PageSettings" minOccurs="0"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="FindModelsResponse">
+    <xsd:element name="FindModelsByCategoryCodeResponse">
         <xsd:complexType>
             <xsd:sequence>
+                <xsd:element name="category" type="Category" minOccurs="0"/>
                 <xsd:element name="models" type="ProductModels"/>
                 <xsd:element name="pageInfo" type="PageInfo"/>
             </xsd:sequence>

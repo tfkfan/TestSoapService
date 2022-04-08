@@ -2,6 +2,7 @@ package com.tfkfan.service.criteria.model;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.BooleanFilter;
@@ -42,7 +43,8 @@ public class CategoryCriteria implements Serializable, Criteria {
 
     private Boolean distinct;
 
-    public CategoryCriteria() {}
+    public CategoryCriteria() {
+    }
 
     public CategoryCriteria(CategoryCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -81,11 +83,9 @@ public class CategoryCriteria implements Serializable, Criteria {
         return code;
     }
 
-    public StringFilter code(StringFilter code) {
-        if (code == null) {
-            code = new StringFilter();
-        }
-        return code;
+    public CategoryCriteria code(StringFilter code) {
+        this.code = code;
+        return this;
     }
 
     public void setCode(StringFilter code) {
@@ -96,11 +96,9 @@ public class CategoryCriteria implements Serializable, Criteria {
         return name;
     }
 
-    public StringFilter name() {
-        if (name == null) {
-            name = new StringFilter();
-        }
-        return name;
+    public CategoryCriteria name(StringFilter name) {
+        this.name = name;
+        return this;
     }
 
     public void setName(StringFilter name) {
@@ -111,11 +109,9 @@ public class CategoryCriteria implements Serializable, Criteria {
         return description;
     }
 
-    public StringFilter description() {
-        if (description == null) {
-            description = new StringFilter();
-        }
-        return description;
+    public CategoryCriteria description(StringFilter description) {
+        this.description = description;
+        return this;
     }
 
     public void setDescription(StringFilter description) {
@@ -126,11 +122,9 @@ public class CategoryCriteria implements Serializable, Criteria {
         return parentCategoryId;
     }
 
-    public LongFilter parentCategoryId() {
-        if (parentCategoryId == null) {
-            parentCategoryId = new LongFilter();
-        }
-        return parentCategoryId;
+    public CategoryCriteria parentCategoryId(LongFilter parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
+        return this;
     }
 
     public void setParentCategoryId(LongFilter parentCategoryId) {
@@ -145,15 +139,18 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.parentCategoryIdNull = parentCategoryIdNull;
     }
 
+    public CategoryCriteria parentCategoryIdNull(Boolean parentCategoryIdNull) {
+        this.parentCategoryIdNull = parentCategoryIdNull;
+        return this;
+    }
+
     public BooleanFilter getIsHidden() {
         return isHidden;
     }
 
-    public BooleanFilter is_hidden() {
-        if (isHidden == null) {
-            isHidden = new BooleanFilter();
-        }
-        return isHidden;
+    public CategoryCriteria isHidden(BooleanFilter isHidden) {
+        this.isHidden = isHidden;
+        return this;
     }
 
     public void setIsHidden(BooleanFilter isHidden) {
@@ -164,25 +161,11 @@ public class CategoryCriteria implements Serializable, Criteria {
         return creationDate;
     }
 
-    public InstantFilter creation_date() {
-        if (creationDate == null) {
-            creationDate = new InstantFilter();
-        }
-        return creationDate;
-    }
-
     public void setCreationDate(InstantFilter creationDate) {
         this.creationDate = creationDate;
     }
 
     public InstantFilter getModificationDate() {
-        return modificationDate;
-    }
-
-    public InstantFilter modification_date() {
-        if (modificationDate == null) {
-            modificationDate = new InstantFilter();
-        }
         return modificationDate;
     }
 
@@ -209,14 +192,14 @@ public class CategoryCriteria implements Serializable, Criteria {
         final CategoryCriteria that = (CategoryCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(code, that.code) &&
-            Objects.equals(name, that.name) &&
-            Objects.equals(description, that.description) &&
-            Objects.equals(parentCategoryId, that.parentCategoryId) &&
-            Objects.equals(isHidden, that.isHidden) &&
-            Objects.equals(creationDate, that.creationDate) &&
-            Objects.equals(modificationDate, that.modificationDate) &&
-            Objects.equals(distinct, that.distinct)
+                Objects.equals(code, that.code) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(parentCategoryId, that.parentCategoryId) &&
+                Objects.equals(isHidden, that.isHidden) &&
+                Objects.equals(creationDate, that.creationDate) &&
+                Objects.equals(modificationDate, that.modificationDate) &&
+                Objects.equals(distinct, that.distinct)
         );
     }
 

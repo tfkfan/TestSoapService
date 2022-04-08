@@ -1,5 +1,8 @@
 package com.tfkfan.exception;
 
+import com.tfkfan.domain.Category;
+import com.tfkfan.domain.CategoryProductModel;
+import com.tfkfan.domain.ProductModel;
 import com.tfkfan.webservices.types.BaseFault;
 
 /**
@@ -28,6 +31,19 @@ public class EntityAlreadyExistsException extends EntityTypeDefinedException{
                                         boolean enableSuppression, boolean writableStackTrace,
                                         String entityType) {
         super(message, cause, enableSuppression, writableStackTrace, dict.getCode(), entityType);
+    }
+
+    public static EntityAlreadyExistsException buildForCategory(String code){
+        return new EntityAlreadyExistsException(String.format("Категория с кодом %s уже существует",code), Category.ENTITY_NAME);
+    }
+
+    public static EntityAlreadyExistsException buildForModel(String code){
+        return new EntityAlreadyExistsException(String.format("Модель с кодом %s уже существует", code), ProductModel.ENTITY_NAME);
+    }
+
+    public static EntityAlreadyExistsException buildForCategoryModel(String categoryCode, String modelCode){
+        return new EntityAlreadyExistsException(String.format("Связь категории %s с моделью %s уже существует",
+            categoryCode, modelCode), CategoryProductModel.ENTITY_NAME);
     }
 
     @Override

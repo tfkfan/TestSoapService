@@ -1,5 +1,6 @@
 package com.tfkfan.exception;
 
+import com.tfkfan.domain.Category;
 import com.tfkfan.webservices.types.BaseFault;
 import com.tfkfan.webservices.types.Fault;
 
@@ -30,6 +31,12 @@ public class EntitySubordinationException extends EntityTypeDefinedException {
                                    String entityType) {
         super(message, cause, enableSuppression, writableStackTrace, dict.getCode(), entityType);
     }
+
+    public static EntitySubordinationException buildForCategory(){
+        return new EntitySubordinationException("Категория не может являться родительской по отношению к самой себе",
+            Category.ENTITY_NAME);
+    }
+
     @Override
     public BaseFault convert() {
         com.tfkfan.webservices.types.EntitySubordinationException fault = new com.tfkfan.webservices.types.EntitySubordinationException();

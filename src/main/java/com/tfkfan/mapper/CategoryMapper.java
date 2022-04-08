@@ -12,7 +12,7 @@ import java.util.List;
  * @author Baltser Artem tfkfan
  */
 @Mapper(componentModel = "spring")
-public interface CategoryMapper extends BaseMapper<Category, com.tfkfan.webservices.types.Category> {
+public interface CategoryMapper extends DtoMapper<Category, com.tfkfan.webservices.types.Category> {
     @Mapping(target = "parentCategoryCode", ignore = true)
     Category toEntity(CreateCategoryRequest request);
 

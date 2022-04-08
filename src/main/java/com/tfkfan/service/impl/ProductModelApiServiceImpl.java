@@ -8,19 +8,16 @@ import com.tfkfan.repository.ProductModelRepository;
 import com.tfkfan.service.ProductModelApiService;
 import com.tfkfan.service.criteria.ProductModelQueryService;
 import com.tfkfan.service.criteria.model.ProductModelCriteria;
-import com.tfkfan.webservices.types.CreateModelRequest;
-import com.tfkfan.webservices.types.FindModelsRequest;
-import com.tfkfan.webservices.types.UpdateModelRequest;
+import com.tfkfan.webservices.types.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.StringFilter;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Baltser Artem tfkfan
@@ -40,14 +37,13 @@ public class ProductModelApiServiceImpl extends BasePageableServiceImpl  impleme
     }
 
     @Override
-    public ProductModel save(CreateModelRequest request) {
+    public CreateModelResponse save(CreateModelRequest request) {
         log.debug("Request to save Model : {}", request);
 
-        ProductModelCriteria criteria = new ProductModelCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
-
-        queryService.findOneByCriteria(criteria).ifPresent((e) -> {
-            throw new EntityAlreadyExistsException(String.format("Модель с кодом %s уже существует", request.getCode()), ProductModel.ENTITY_NAME);
+        queryService.findOneByCriteria(new ProductModelCriteria()
+                .code((StringFilter) new StringFilter().setEquals(request.getCode())))
+            .ifPresent((e) -> {
+            throw EntityAlreadyExistsException.buildForModel(request.getCode());
         });
 
         ProductModel entity = mapper.toEntity(request);
@@ -56,36 +52,29 @@ public class ProductModelApiServiceImpl extends BasePageableServiceImpl  impleme
         entity.setName(request.getName());
         entity.setCode(request.getCode());
 
-        return repository.save(entity);
+        return mapper.toCreateResponse(repository.save(entity));
     }
 
     @Override
-    public ProductModel update(UpdateModelRequest request) {
+    public UpdateModelResponse update(UpdateModelRequest request) {
         log.debug("Request to update Model : {}", request);
 
-        ProductModelCriteria criteria = new ProductModelCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
-
-        ProductModel entity = queryService
-            .findOneByCriteria(criteria)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Модель с кодом %s не найдена", request.getCode()), ProductModel.ENTITY_NAME));
+        final ProductModel entity = queryService
+            .findOneByCriteria(new ProductModelCriteria()
+                .code((StringFilter) new StringFilter().setEquals(request.getCode())))
+            .orElseThrow(() -> EntityNotFoundException.buildForModel(request.getCode()));
 
         if (Objects.nonNull(request.getName()))
             entity.setName(request.getName());
 
         entity.setDescription(request.getDescription());
 
-        return repository.save(entity);
+        return mapper.toUpdateResponse(repository.save(entity));
     }
 
     @Override
-    public Page<ProductModel> findAll(Pageable pageable) {
-        log.debug("Request to get all Categories");
-        return repository.findAll(pageable);
-    }
-
-    @Override
-    public Page<ProductModel> findAll(FindModelsRequest request) {
+    @Transactional(readOnly = true)
+    public FindModelsResponse findAll(FindModelsRequest request) {
         log.debug("Request to get all Models");
 
         Pageable pageable = pageable(request.getPageSettings());
@@ -98,26 +87,6 @@ public class ProductModelApiServiceImpl extends BasePageableServiceImpl  impleme
         if(!StringUtils.isEmpty(request.getDescription()))
             criteria.setDescription(new StringFilter().setContains(request.getDescription()));
 
-        return queryService.findByCriteria(criteria, pageable);
-    }
-
-    @Override
-    public Optional<ProductModel> findOne(Long id) {
-        log.debug("Request to get Category : {}", id);
-        return repository.findById(id);
-    }
-
-    @Override
-    public Optional<ProductModel> findOneByCode(String code) {
-        log.debug("Request to get Model by code: {}", code);
-        ProductModelCriteria criteria = new ProductModelCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(code));
-        return queryService.findOneByCriteria(criteria);
-    }
-
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Category : {}", id);
-        repository.deleteById(id);
+        return mapper.toFindResponse(queryService.findByCriteria(criteria, pageable));
     }
 }

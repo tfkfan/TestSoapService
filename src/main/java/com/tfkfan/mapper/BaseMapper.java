@@ -7,12 +7,11 @@ import org.springframework.data.domain.Page;
 /**
  * @author Baltser Artem tfkfan
  */
-public interface BaseMapper<E,D> {
+public interface BaseMapper {
     String PAGE_INFO_MAPPING = "PAGE_INFO_MAPPING";
-    String DTO_MAPPING = "DTO_MAPPING";
 
     @Named(PAGE_INFO_MAPPING)
-    default PageInfo pageInfo(Page<E> page){
+    default <E> PageInfo pageInfo(Page<E> page){
         PageInfo info = new PageInfo();
         info.setPageNum(page.getPageable().getPageNumber());
         info.setPageSize(page.getPageable().getPageSize());
@@ -22,7 +21,4 @@ public interface BaseMapper<E,D> {
 
         return info;
     }
-
-    @Named(DTO_MAPPING)
-    D toDto(E entity);
 }

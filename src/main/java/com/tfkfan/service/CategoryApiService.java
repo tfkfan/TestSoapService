@@ -1,13 +1,9 @@
 package com.tfkfan.service;
 
 import com.tfkfan.domain.Category;
-import java.util.Optional;
+import com.tfkfan.webservices.types.*;
 
-import com.tfkfan.webservices.types.CreateCategoryRequest;
-import com.tfkfan.webservices.types.FindCategoriesRequest;
-import com.tfkfan.webservices.types.UpdateCategoryRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.Optional;
 
 /**
  * Service Interface for managing {@link Category}.
@@ -19,7 +15,7 @@ public interface CategoryApiService extends PageableService{
      * @param request the entity to save.
      * @return the persisted entity.
      */
-    Category save(CreateCategoryRequest request);
+    CreateCategoryResponse save(CreateCategoryRequest request);
 
     /**
      * Partially updates a category.
@@ -27,15 +23,8 @@ public interface CategoryApiService extends PageableService{
      * @param request the entity to update partially.
      * @return the persisted entity.
      */
-    Category update(UpdateCategoryRequest request);
+    UpdateCategoryResponse update(UpdateCategoryRequest request);
 
-    /**
-     * Get all the categories.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<Category> findAll(Pageable pageable);
 
     /**
      * Get all the categories.
@@ -43,28 +32,5 @@ public interface CategoryApiService extends PageableService{
      * @param request the request information.
      * @return the list of entities.
      */
-    Page<Category> findAll(FindCategoriesRequest request);
-
-    /**
-     * Get the "id" category.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    Optional<Category> findOne(Long id);
-
-    /**
-     * Get the "code" category.
-     *
-     * @param code the code of the entity.
-     * @return the entity.
-     */
-    Optional<Category> findOneByCode(String code);
-
-    /**
-     * Delete the "id" category.
-     *
-     * @param id the id of the entity.
-     */
-    void delete(Long id);
+    FindCategoriesResponse findAll(FindCategoriesRequest request);
 }

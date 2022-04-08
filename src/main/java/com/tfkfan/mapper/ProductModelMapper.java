@@ -12,7 +12,7 @@ import java.util.List;
  * @author Baltser Artem tfkfan
  */
 @Mapper(componentModel = "spring")
-public interface ProductModelMapper extends BaseMapper<ProductModel, com.tfkfan.webservices.types.ProductModel>{
+public interface ProductModelMapper extends DtoMapper<ProductModel, com.tfkfan.webservices.types.ProductModel>{
     com.tfkfan.domain.ProductModel toEntity(CreateModelRequest request);
 
     List<com.tfkfan.webservices.types.ProductModel> toDtos(List<ProductModel> entities);

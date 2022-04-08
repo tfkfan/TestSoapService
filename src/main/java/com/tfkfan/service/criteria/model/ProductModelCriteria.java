@@ -23,6 +23,8 @@ public class ProductModelCriteria implements Serializable, Criteria {
 
     private StringFilter code;
 
+    private StringFilter categoryCode;
+
     private StringFilter name;
 
     private StringFilter description;
@@ -38,6 +40,7 @@ public class ProductModelCriteria implements Serializable, Criteria {
     public ProductModelCriteria(ProductModelCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.code = other.code == null ? null : other.code.copy();
+        this.categoryCode = other.categoryCode == null ? null : other.categoryCode.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.creationDate = other.creationDate == null ? null : other.creationDate.copy();
@@ -69,15 +72,26 @@ public class ProductModelCriteria implements Serializable, Criteria {
         return code;
     }
 
-    public StringFilter code(StringFilter code) {
-        if (code == null) {
-            code = new StringFilter();
-        }
-        return code;
-    }
-
     public void setCode(StringFilter code) {
         this.code = code;
+    }
+
+    public ProductModelCriteria code(StringFilter code){
+        this.code = code;
+        return this;
+    }
+
+    public StringFilter getCategoryCode() {
+        return categoryCode;
+    }
+
+    public void setCategoryCCode(StringFilter categoryCode) {
+        this.categoryCode = categoryCode;
+    }
+
+    public ProductModelCriteria categoryCode(StringFilter categoryCode){
+        this.categoryCode = categoryCode;
+        return this;
     }
 
     public StringFilter getName() {

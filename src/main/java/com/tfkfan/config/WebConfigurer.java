@@ -1,10 +1,7 @@
 package com.tfkfan.config;
 
 import com.tfkfan.web.resolver.SoapExceptionResolver;
-import com.tfkfan.webservices.types.CategoryService;
-import com.tfkfan.webservices.types.CategoryServicePorts;
-import com.tfkfan.webservices.types.ProductModelService;
-import com.tfkfan.webservices.types.ProductModelServicePorts;
+import com.tfkfan.webservices.types.*;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
@@ -122,6 +119,20 @@ public class WebConfigurer implements ServletContextInitializer {
         endpoint.setWsdlLocation(service.getWSDLDocumentLocation().toString());
         endpoint.setProperties(getEndpointProps());
         endpoint.publish("/modelservice");
+        return endpoint;
+    }
+
+    @Bean
+    public Endpoint categoryModelServiceEndpointBean(Bus bus, CategoryModelServicePorts serviceEndpoint) {
+        EndpointImpl endpoint = new EndpointImpl(bus, serviceEndpoint);
+
+        final Service service = new CategoryModelService();
+
+        endpoint.setServiceName(service.getServiceName());
+        endpoint.setEndpointName(service.getPorts().next());
+        endpoint.setWsdlLocation(service.getWSDLDocumentLocation().toString());
+        endpoint.setProperties(getEndpointProps());
+        endpoint.publish("/categorymodelservice");
         return endpoint;
     }
 

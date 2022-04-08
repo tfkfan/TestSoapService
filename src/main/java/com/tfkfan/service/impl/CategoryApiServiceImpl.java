@@ -4,29 +4,25 @@ import com.tfkfan.domain.Category;
 import com.tfkfan.exception.EntityAlreadyExistsException;
 import com.tfkfan.exception.EntityNotFoundException;
 import com.tfkfan.exception.EntitySubordinationException;
-import com.tfkfan.repository.CategoryRepository;
-import com.tfkfan.service.criteria.CategoryQueryService;
-import com.tfkfan.service.CategoryApiService;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.tfkfan.service.criteria.model.CategoryCriteria;
 import com.tfkfan.mapper.CategoryMapper;
-import com.tfkfan.webservices.types.CreateCategoryRequest;
-import com.tfkfan.webservices.types.FindCategoriesRequest;
-import com.tfkfan.webservices.types.UpdateCategoryRequest;
+import com.tfkfan.repository.CategoryRepository;
+import com.tfkfan.service.CategoryApiService;
+import com.tfkfan.service.criteria.CategoryQueryService;
+import com.tfkfan.service.criteria.model.CategoryCriteria;
+import com.tfkfan.webservices.types.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.BooleanFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Category}.
@@ -47,69 +43,53 @@ public class CategoryApiServiceImpl extends BasePageableServiceImpl implements C
     }
 
     @Override
-    public Category save(CreateCategoryRequest request) {
+    public CreateCategoryResponse save(CreateCategoryRequest request) {
         log.debug("Request to save Category : {}", request);
         if (!StringUtils.isEmpty(request.getParentCategoryCode()) && request.getCode().equals(request.getParentCategoryCode()))
             throw new EntitySubordinationException("Категория не может являться родительской по отношению к самой себе",
                 Category.ENTITY_NAME);
 
-        Category parent = null;
-
+        final Category category = mapper.toEntity(request);
         if (!StringUtils.isEmpty(request.getParentCategoryCode())) {
-            CategoryCriteria criteria = new CategoryCriteria();
-            criteria.setCode((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()));
-            criteria.setParentCategoryId((LongFilter) new LongFilter().setEquals(null));
-
-            parent = queryService
-                .findOneByCriteria(criteria)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Родительская категория с кодом %s не найдена", request.getParentCategoryCode())
-                    , Category.ENTITY_NAME));
+            final Category parent = queryService
+                .findOneByCriteria(new CategoryCriteria()
+                    .code((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()))
+                    .parentCategoryIdNull(true))
+                .orElseThrow(() -> EntityNotFoundException.buildForParentCategory(request.getParentCategoryCode()));
+            category.setParentCategoryId(parent.getId());
         }
 
-        CategoryCriteria criteria = new CategoryCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
+        queryService.findOneByCriteria(new CategoryCriteria()
+            .code((StringFilter) new StringFilter()
+                .setEquals(request.getCode())))
+            .ifPresent((e) -> {
+                throw EntityAlreadyExistsException.buildForCategory(request.getCode());
+            });
 
-        queryService.findOneByCriteria(criteria).ifPresent((e) -> {
-            throw new EntityAlreadyExistsException(String.format("Категория с кодом %s уже существует", request.getCode()), Category.ENTITY_NAME);
-        });
-
-        Category category = mapper.toEntity(request);
-
-        if (Objects.nonNull(parent))
-            category.setParentCategoryId(parent.getId());
-
-        return repository.save(category);
+        return mapper.toCreateResponse(repository.save(category));
     }
 
     @Override
-    public Category update(UpdateCategoryRequest request) {
+    public UpdateCategoryResponse update(UpdateCategoryRequest request) {
         log.debug("Request to partially update Category : {}", request);
 
-        CategoryCriteria criteria = new CategoryCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(request.getCode()));
-
-        Category entity = queryService
-            .findOneByCriteria(criteria)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Категория с кодом %s не найдена", request.getCode()), Category.ENTITY_NAME));
+        final Category entity = queryService
+            .findOneByCriteria(new CategoryCriteria().code((StringFilter) new StringFilter().setEquals(request.getCode())))
+            .orElseThrow(() -> EntityNotFoundException.buildForCategory(request.getCode()));
 
         if (!StringUtils.isEmpty(request.getParentCategoryCode()) && entity.getCode().equals(request.getParentCategoryCode()))
-            throw new EntitySubordinationException("Категория не может являться родительской по отношению к самой себе",
-                Category.ENTITY_NAME);
+            throw EntitySubordinationException.buildForCategory();
 
-        Category parent = null;
         if (!StringUtils.isEmpty(request.getParentCategoryCode())) {
-            criteria = new CategoryCriteria();
-            criteria.setCode((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()));
-            criteria.setParentCategoryIdNull(true);
+            final Category parent = queryService
+                .findOneByCriteria(new CategoryCriteria()
+                    .code((StringFilter) new StringFilter().setEquals(request.getParentCategoryCode()))
+                    .parentCategoryIdNull(true))
+                .orElseThrow(() -> EntityNotFoundException.buildForParentCategory(request.getParentCategoryCode()));
 
-            parent = queryService
-                .findOneByCriteria(criteria)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Родительская категория с кодом %s не найдена", request.getParentCategoryCode())
-                    , Category.ENTITY_NAME));
+            entity.setParentCategoryId(parent.getId());
         }
 
-        if (Objects.nonNull(parent))
-            entity.setParentCategoryId(parent.getId());
         if (Objects.nonNull(request.getName()))
             entity.setName(request.getName());
         if (Objects.nonNull(request.isIsHidden()))
@@ -117,32 +97,28 @@ public class CategoryApiServiceImpl extends BasePageableServiceImpl implements C
 
         entity.setDescription(request.getDescription());
 
-        return repository.save(entity);
+        return mapper.toUpdateResponse(repository.save(entity));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Category> findAll(Pageable pageable) {
-        log.debug("Request to get all Categories");
-        return repository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Category> findAll(FindCategoriesRequest request) {
+    public FindCategoriesResponse findAll(FindCategoriesRequest request) {
         log.debug("Request to get all Categories");
 
         Pageable pageable = pageable(request.getPageSettings());
 
         if (!request.getParentCategoryCodes().isEmpty()) {
-            CategoryCriteria criteria = new CategoryCriteria();
-            criteria.code((StringFilter) new StringFilter().setIn(request.getParentCategoryCodes()));
-            criteria.setParentCategoryIdNull(true);
-            List<Category> parentCategories = queryService.findByCriteria(criteria);
+            List<Category> parentCategories = queryService.findByCriteria(new CategoryCriteria()
+                .code((StringFilter) new StringFilter().setIn(request.getParentCategoryCodes()))
+                .parentCategoryIdNull(true));
 
-            criteria = new CategoryCriteria();
-            criteria.setParentCategoryId((LongFilter) new LongFilter().setIn(parentCategories.stream().map(Category::getId).collect(Collectors.toList())));
             request.getCodes().addAll(queryService
-                .findByCriteria(criteria)
+                .findByCriteria(new CategoryCriteria()
+                    .parentCategoryId((LongFilter)
+                        new LongFilter().setIn(parentCategories
+                            .stream()
+                            .map(Category::getId)
+                            .collect(Collectors.toList()))))
                 .stream()
                 .map(Category::getCode)
                 .collect(Collectors.toList()));
@@ -160,27 +136,6 @@ public class CategoryApiServiceImpl extends BasePageableServiceImpl implements C
         if (Objects.nonNull(request.isOnlyParent()))
             criteria.setParentCategoryIdNull(true);
 
-        return queryService.findByCriteria(criteria, pageable);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Category> findOne(Long id) {
-        log.debug("Request to get Category : {}", id);
-        return repository.findById(id);
-    }
-
-    @Override
-    public Optional<Category> findOneByCode(String code) {
-        log.debug("Request to get Category by code: {}", code);
-        CategoryCriteria criteria = new CategoryCriteria();
-        criteria.setCode((StringFilter) new StringFilter().setEquals(code));
-        return queryService.findOneByCriteria(criteria);
-    }
-
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Category : {}", id);
-        repository.deleteById(id);
+        return mapper.toFindResponse(queryService.findByCriteria(criteria, pageable));
     }
 }

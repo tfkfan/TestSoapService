@@ -1,5 +1,6 @@
 package com.tfkfan.service.criteria;
 
+import com.tfkfan.domain.Category_;
 import com.tfkfan.domain.ProductModel;
 import com.tfkfan.domain.ProductModel_;
 import com.tfkfan.repository.ProductModelRepository;
@@ -94,6 +95,9 @@ public class ProductModelQueryService extends BaseQueryService<ProductModel> {
             }
             if (criteria.getCode() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCode(), ProductModel_.code));
+            }
+            if (criteria.getCategoryCode() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getCategoryCode(), ProductModel_.categories, Category_.code));
             }
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), ProductModel_.name));
