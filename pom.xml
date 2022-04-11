@@ -25,7 +25,7 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>15</java.version>
+        <java.version>17</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -421,21 +421,21 @@
                             <sourceRoot>${project.build.directory}/generated-sources/generated</sourceRoot>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/CategoryService/service.wsdl</wsdl>
+                                    <wsdl>classpath:wsdl/CategoryService/service.wsdl</wsdl>
                                     <wsdlLocation>classpath:wsdl/CategoryService/service.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
                                     </extraargs>
                                 </wsdlOption>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/ProductModelService/service.wsdl</wsdl>
+                                    <wsdl>classpath:wsdl/ProductModelService/service.wsdl</wsdl>
                                     <wsdlLocation>classpath:wsdl/ProductModelService/service.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->
                                     </extraargs>
                                 </wsdlOption>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/CategoryModelService/service.wsdl</wsdl>
+                                    <wsdl>classpath:wsdl/CategoryModelService/service.wsdl</wsdl>
                                     <wsdlLocation>classpath:wsdl/CategoryModelService/service.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xsetters</extraarg><!-- needed so that setters for lists are generated -->

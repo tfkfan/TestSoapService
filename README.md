@@ -18,7 +18,6 @@ Node необходим для генерации и рекомендован д
 ./mvnw
 ```
 
-
 ## Prod-сборка
 
 ### Сборка jar
@@ -43,6 +42,16 @@ java -jar target/*.jar
 
 ```
 ./mvnw -Pprod,war clean verify
+```
+
+## Упрощенная сборка и запуск
+```
+./mvnw -Pprod clean verify
+
+docker-compose -f src/main/docker/postgresql.yml up -d
+
+java -jar target/*.jar
+
 ```
 
 ## Тестирование
@@ -106,6 +115,14 @@ sh docker-build-deploy.sh
 
 Больше информации на [Using Docker and Docker-Compose][]
 
+Сервисы доступны по адресам
+```
+<EXTERNAL HOST>:8080/ws/v1/categoryservice?wsdl
+<EXTERNAL HOST>:8080/ws/v1/modelservice?wsdl
+<EXTERNAL HOST>:8080/ws/v1/categorymodelservice?wsdl
+```
+
+См. <EXTERNAL HOST> в логах при запуске приложения
 ## Continuous Integration (optional)
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
